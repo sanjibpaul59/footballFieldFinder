@@ -5,17 +5,21 @@ import CardContent from '@material-ui/core/CardContent'
 import CardMedia from '@material-ui/core/CardMedia'
 import Typography from '@material-ui/core/Typography'
 import Paper from '@material-ui/core/Paper'
+import Grid from '@material-ui/core/Grid'
 import fieldInIsland from './../assets/images/fieldInIsland.jpg'
+import SportsSoccerIcon from '@material-ui/icons/SportsSoccer'
+import LocationSearchingIcon from '@material-ui/icons/LocationSearching'
+import BookIcon from '@material-ui/icons/Book'
 
 const useStyles = makeStyles((theme) => ({
   card: {
     maxWidth: '100%',
     margin: 'auto',
     marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(4),
+    marginBottom: theme.spacing(2),
   },
   title: {
-    padding: `${theme.spacing(3)}px ${theme.spacing(2.5)}px ${theme.spacing(
+    padding: `${theme.spacing(2)}px ${theme.spacing(2.5)}px ${theme.spacing(
       2,
     )}px`,
     color: theme.palette.openTitle,
@@ -25,10 +29,9 @@ const useStyles = makeStyles((theme) => ({
     minHeight: 400,
   },
   credit: {
-    padding: 10,
+    padding: 4,
     textAlign: 'right',
-    backgroundColor: '#ededed',
-    borderBottom: '1px solid #d0d0d0',
+    backgroundColor: '#fafafa',
     '& a': {
       color: '#3f4771',
     },
@@ -39,6 +42,24 @@ const useStyles = makeStyles((theme) => ({
     )}px`,
     color: '#2e7d32',
     textAlign: 'center',
+  },
+  root: {
+    flexGrow: 1,
+  },
+  paper: {
+    padding: `${theme.spacing(2)}px`,
+    textAlign: 'center',
+    color: '#2e7d32',
+  },
+  searchOption: {
+    marginBottom: theme.spacing(10),
+  },
+  motto: {
+    padding: theme.spacing(2),
+    color: '#263238',
+  },
+  mottoIcon: {
+    fontSize: 48,
   },
 }))
 
@@ -57,6 +78,7 @@ export default function Home() {
           component="p"
           className={classes.credit}
           color="textSecondary"
+          elevation={0}
         >
           Photo by{' '}
           <a
@@ -78,9 +100,39 @@ export default function Home() {
           </Typography>
         </CardContent>
       </Card>
-      <Paper elevation={0} style={{ textAlign: 'center' }}>
-        <Typography variant="h5">Find a Field Near You</Typography>
-      </Paper>
+      <div className={classes.searchOption}>
+        <Paper elevation={0} style={{ textAlign: 'center' }}>
+          <Typography variant="h5">Find a Field Near You</Typography>
+        </Paper>
+      </div>
+      <div className={classes.root}>
+        <Grid container spacing={3}>
+          <Grid item xs={4}>
+            <Paper elevation={0} className={classes.paper}>
+              <LocationSearchingIcon className={classes.mottoIcon} />
+              <Typography variant="h3" className={classes.motto}>
+                Find
+              </Typography>
+            </Paper>
+          </Grid>
+          <Grid item xs={4}>
+            <Paper elevation={0} className={classes.paper}>
+              <BookIcon className={classes.mottoIcon} />
+              <Typography variant="h3" className={classes.motto}>
+                Book
+              </Typography>
+            </Paper>
+          </Grid>
+          <Grid item xs={4}>
+            <Paper elevation={0} className={classes.paper}>
+              <SportsSoccerIcon className={classes.mottoIcon} />
+              <Typography variant="h3" className={classes.motto}>
+                Play
+              </Typography>
+            </Paper>
+          </Grid>
+        </Grid>
+      </div>
     </div>
   )
 }

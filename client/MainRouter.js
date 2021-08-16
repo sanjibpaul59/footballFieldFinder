@@ -20,8 +20,8 @@ const MainRouter = () => {
         <Route exact path="/" component={Home} />
         <Route path="/signup" component={Signup} />
         <Route path="/signin" component={Signin} />
-        <Route path="/user/:userId" component={Profile} />
         <PrivateRoute path="/user/edit/:userId" component={EditProfile} />
+        <Route path="/user/:userId" component={Profile} />
         //Open for all visitors
         <Route path="/fields" component={Fields} />
         //For the field owners

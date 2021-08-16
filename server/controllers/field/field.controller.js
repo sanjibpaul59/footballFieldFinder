@@ -1,7 +1,6 @@
 import Field from '../../models/field.model'
 import extend from 'lodash/extend'
 import errorHandler from './../../helpers/dbErrorHandler'
-
 import fs from 'fs'
 import formidable from 'formidable'
 import defaultImg from './../../../client/assets/images/default-field.jpg'
@@ -15,6 +14,7 @@ const create = (req, res) => {
         error: 'Image could not be uploaded',
       })
     }
+    console.log(fields)
     let field = new Field(fields)
     field.fieldOwner = req.profile
     if (files.image) {

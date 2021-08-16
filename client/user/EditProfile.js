@@ -100,7 +100,7 @@ export default function EditProfile({ match }) {
     values.email && userData.append('email', values.email)
     values.password && userData.append('password', values.password)
     values.photo && userData.append('photo', values.photo)
-    values.owner && userData.append('owner', values.owner)
+    values.owner && userData.append('owner', JSON.stringify(values.owner))
 
     update(
       {
@@ -115,12 +115,13 @@ export default function EditProfile({ match }) {
         setValues({ ...values, error: data.error })
       } else {
         auth.updateUser(data, () => {
-          setValues({ ...values, error: '', redirectToProfile: true })
+          setValues({ ...values, userId: data._id, redirectToProfile: true })
         })
       }
     })
   }
   const handleChange = (name) => (event) => {
+    console.log(event.target.value)
     const value = name === 'photo' ? event.target.files[0] : event.target.value
     //user.set(name, value)
     setValues({ ...values, [name]: value })

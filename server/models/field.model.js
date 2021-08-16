@@ -1,20 +1,20 @@
-import mongoose from "mongoose";
-import autopopulate from "mongoose-autopopulate";
+import mongoose from 'mongoose';
+import autopopulate from 'mongoose-autopopulate';
 
 const FieldSchema = new mongoose.Schema({
   fieldName: {
     type: String,
-    unique: true,
-    required: [true, "Field name is required"],
+
+    required: [true, 'Field name is required'],
   },
   fieldLocation: {
     type: String,
-    unique: true,
-    required: [true, "Location is required"],
+
+    required: [true, 'Location is required'],
   },
   fieldDetails: {
     type: String,
-    required: [true, "Details required"],
+    required: [true, 'Details required'],
   },
   image: {
     type: Buffer,
@@ -26,7 +26,7 @@ const FieldSchema = new mongoose.Schema({
   },
   fieldOwner: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: 'User',
     autopopulate: true,
   },
   facilities: {
@@ -42,4 +42,4 @@ const FieldSchema = new mongoose.Schema({
 
 FieldSchema.plugin(autopopulate);
 
-export default mongoose.model("Field", FieldSchema);
+export default mongoose.model('Field', FieldSchema);
