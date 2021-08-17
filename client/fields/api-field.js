@@ -1,5 +1,4 @@
-const createField = async (params, credentials, field) => {
-  console.log(JSON.parse(field));
+const create = async (params, credentials, field) => {
   try {
     let response = await fetch('/api/fields/by/' + params.userId, {
       method: 'POST',
@@ -9,7 +8,7 @@ const createField = async (params, credentials, field) => {
       },
       body: field,
     });
-    return response.json();
+    return await response.json();
   } catch (err) {
     console.log(err);
   }
@@ -53,7 +52,7 @@ const listByOwner = async (params, credentials, signal) => {
         Authorization: 'Bearer' + credentials.t,
       },
     });
-    return response.json();
+    return await response.json();
   } catch (err) {
     console.log(err);
   }

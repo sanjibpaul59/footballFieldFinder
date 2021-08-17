@@ -1,43 +1,43 @@
-import React from 'react'
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
-import Typography from '@material-ui/core/Typography'
-import IconButton from '@material-ui/core/IconButton'
-import HomeIcon from '@material-ui/icons/Home'
-import Button from '@material-ui/core/Button'
-import SportsSoccerOutlinedIcon from '@material-ui/icons/SportsSoccerOutlined'
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
-import PersonAddOutlinedIcon from '@material-ui/icons/PersonAddOutlined'
-import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined'
-import auth from './../auth/auth-helper'
-import { Link, withRouter } from 'react-router-dom'
+import React from 'react';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import HomeIcon from '@material-ui/icons/Home';
+import Button from '@material-ui/core/Button';
+import SportsSoccerOutlinedIcon from '@material-ui/icons/SportsSoccerOutlined';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import PersonAddOutlinedIcon from '@material-ui/icons/PersonAddOutlined';
+import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
+import auth from './../auth/auth-helper';
+import { Link, withRouter } from 'react-router-dom';
 
 //skeleton function (don't remove)
 const isActive = (history, path) => {
-  if (history.location.pathname == path) return { color: '#2e7d32' }
-  else return { color: '#263238' }
-}
+  if (history.location.pathname == path) return { color: '#2e7d32' };
+  else return { color: '#263238' };
+};
 const isPartActive = (history, path) => {
   if (history.location.pathname.includes(path))
-    return { color: '#2e7d32', backgroundColor: '#eceff1', marginRight: 10 }
+    return { color: '#2e7d32', backgroundColor: '#eceff1', marginRight: 10 };
   else
     return {
       color: '#263238',
       backgroundColor: '#fafafa',
       marginRight: 10,
-    }
-}
+    };
+};
 
 const flexStyle = {
   flexGrow: 1,
-}
+};
 
 const iconStyle = {
   marginRight: 1,
   padding: 2,
   color: 'inherit',
   fontSize: 'medium',
-}
+};
 //Don't remove
 const Menu = withRouter(({ history }) => (
   <div style={flexStyle}>
@@ -85,7 +85,7 @@ const Menu = withRouter(({ history }) => (
                     <Link to="/owner/my-fields">
                       <Button style={isPartActive(history, '/owner/my-fields')}>
                         <SportsSoccerOutlinedIcon style={iconStyle} />
-                        My Field
+                        My Fields
                       </Button>
                     </Link>
                     <Link to="/owner/add-field">
@@ -118,7 +118,7 @@ const Menu = withRouter(({ history }) => (
                 <Button
                   color="inherit"
                   onClick={() => {
-                    auth.clearJWT(() => history.push('/'))
+                    auth.clearJWT(() => history.push('/'));
                   }}
                 >
                   Sign out
@@ -130,6 +130,6 @@ const Menu = withRouter(({ history }) => (
       </Toolbar>
     </AppBar>
   </div>
-))
+));
 
-export default Menu
+export default Menu;
