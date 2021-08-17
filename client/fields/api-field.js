@@ -1,12 +1,12 @@
-const create = async (params, credentials, field) => {
+const create = async (params, credentials, fieldData) => {
   try {
-    let response = await fetch('/api/fields/by/' + params.userId, {
-      method: 'POST',
+    let response = await fetch("/api/fields/by/" + params.userId, {
+      method: "POST",
       headers: {
-        Accept: 'application/json',
-        Authorization: 'Bearer' + credentials.t,
+        Accept: "application/json",
+        Authorization: "Bearer" + credentials.t,
       },
-      body: field,
+      body: fieldData,
     });
     return await response.json();
   } catch (err) {
@@ -16,8 +16,8 @@ const create = async (params, credentials, field) => {
 
 const list = async (signal) => {
   try {
-    let response = await fetch('api/fields/', {
-      method: 'GET',
+    let response = await fetch("api/fields/", {
+      method: "GET",
       signal: signal,
     });
     return await response.json();
@@ -28,12 +28,12 @@ const list = async (signal) => {
 
 const read = async (params, signal) => {
   try {
-    let response = await fetch('/api/fields/' + params.fieldId, {
-      method: 'GET',
+    let response = await fetch("/api/fields/" + params.fieldId, {
+      method: "GET",
       signal: signal,
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
     });
     return await response.json();
@@ -44,12 +44,12 @@ const read = async (params, signal) => {
 
 const listByOwner = async (params, credentials, signal) => {
   try {
-    let response = await fetch('/api/fields/by/' + params.userId, {
-      method: 'GET',
+    let response = await fetch("/api/fields/by/" + params.userId, {
+      method: "GET",
       signal: signal,
       headers: {
-        Accept: 'application/json',
-        Authorization: 'Bearer' + credentials.t,
+        Accept: "application/json",
+        Authorization: "Bearer" + credentials.t,
       },
     });
     return await response.json();

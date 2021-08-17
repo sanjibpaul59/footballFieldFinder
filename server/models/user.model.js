@@ -13,6 +13,17 @@ const UserSchema = new mongoose.Schema({
     match: [/.+\@.+\..+/, "Please fill a valid email address"],
     required: "Email is required",
   },
+  phone: {
+    type: String,
+    unique: "Phone number already exists",
+    validate: {
+      validator: function (num) {
+        return /\d{5}-\d{6}/.test(num);
+      },
+      message: (props) => `${props.value} is not a valid Number!`,
+    },
+    required: [true, "User phone number required"],
+  },
   owner: {
     type: Boolean,
     default: false,

@@ -2,21 +2,37 @@ import mongoose from "mongoose";
 import autopopulate from "mongoose-autopopulate";
 
 const FieldSchema = new mongoose.Schema({
-  fieldName: {
+  bin: {
+    type: Number,
+    validate: {
+      validator: function (v) {
+        return v.length === 13 ? true : false;
+      },
+      message: (props) =>
+        `${props.value} is mot a valid Business Identification Number`,
+    },
+    required: [true, "Business Identification Number is Required"],
+  },
+  name: {
     type: String,
     required: [true, "Field name is required"],
   },
-  fieldLocation: {
+  location: {
     type: String,
     required: [true, "Location is required"],
   },
-  fieldDetails: {
+  description: {
     type: String,
     required: [true, "Details required"],
   },
   image: {
     type: Buffer,
     contentType: String,
+    required: [true, "Please Upload an image of your field"],
+  },
+  fieldType: {
+    type: String,
+    required: [true, "Field Type is required"],
   },
   openForBooking: {
     type: Boolean,

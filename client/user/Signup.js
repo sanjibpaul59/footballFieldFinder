@@ -45,8 +45,9 @@ export default function Signup() {
   const classes = useStyles();
   const [values, setValues] = useState({
     name: "",
-    password: "",
     email: "",
+    phone: "",
+    password: "",
     open: false,
     error: "",
   });
@@ -59,6 +60,7 @@ export default function Signup() {
     const user = {
       name: values.name || undefined,
       email: values.email || undefined,
+      phone: values.phone || undefined,
       password: values.password || undefined,
     };
     create(user).then((data) => {
@@ -93,6 +95,16 @@ export default function Signup() {
             className={classes.textField}
             value={values.email}
             onChange={handleChange("email")}
+            margin="normal"
+          />
+          <br />
+          <TextField
+            id="phone"
+            type="phone"
+            label="Phone Number"
+            className={classes.textField}
+            value={values.phone}
+            onChange={handleChange("phone")}
             margin="normal"
           />
           <br />

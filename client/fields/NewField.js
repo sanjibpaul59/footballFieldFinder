@@ -1,36 +1,43 @@
 import React, { useState } from "react";
+import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
-import Button from "@material-ui/core/Button";
+import Chip from "@material-ui/core/Chip";
 import FileUpload from "@material-ui/icons/AddPhotoAlternate";
+import Grid from "@material-ui/core/Grid";
+import FormControl from "@material-ui/core/FormControl";
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
 import auth from "../auth/auth-helper";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Icon from "@material-ui/core/Icon";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { create } from "./api-field.js";
 import { Link, Redirect } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   card: {
-    maxWidth: 600,
+    maxWidth: 700,
     margin: "auto",
     textAlign: "center",
     marginTop: theme.spacing(12),
-    paddingBottom: theme.spacing(2),
+    paddingBottom: theme.spacing(4),
   },
   error: {
     verticalAlign: "middle",
   },
   title: {
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(3),
     color: theme.palette.openTitle,
   },
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
-    width: 300,
+    width: 400,
   },
   submit: {
     margin: "auto",
@@ -42,19 +49,66 @@ const useStyles = makeStyles((theme) => ({
   filename: {
     marginLeft: "10px",
   },
+  btn: {
+    backgroundColor: "#00796b",
+    marginBottom: theme.spacing(1),
+  },
+  root: {
+    flexGrow: 1,
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 400,
+  },
+  chips: {
+    display: "flex",
+    flexWrap: "noWrap",
+  },
+  chip: {
+    margin: 2,
+  },
 }));
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+const allFacilities = [
+  "Flood Light",
+  "Parking Slots",
+  "Snacks",
+  "Extra Ball",
+  "Shop",
+  "Water",
+];
+function getStyles(facility, facilityName, theme) {
+  return {
+    fontWeight:
+      facilityName.indexOf(facility) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
+}
 
 export default function NewField() {
   const classes = useStyles();
+  const theme = useTheme();
   const [values, setValues] = useState({
-    fieldName: "",
-    fieldLocation: "",
-    fieldDetails: "",
+    bin: "",
+    name: "",
+    location: "",
+    description: "",
+    fieldType: "",
+    facilities: [],
     image: "",
     redirect: false,
     error: "",
   });
-
   const jwt = auth.isAuthenticated();
 
   const handleChange = (name) => (event) => {
@@ -63,13 +117,15 @@ export default function NewField() {
   };
 
   const clickSubmit = () => {
+    console.log(values);
     let fieldData = new FormData();
+    values.bin && fieldData.append("bin", values.bin);
+    values.name && fieldData.append("name", values.name);
+    values.location && fieldData.append("location", values.location);
+    values.description && fieldData.append("description", values.description);
+    values.fieldType && fieldData.append("fieldType", values.fieldType);
+    values.facilities && fieldData.append("facilities", values.facilities);
     values.image && fieldData.append("image", values.image);
-    values.fieldName && fieldData.append("fieldName", values.fieldName);
-    values.fieldLocation &&
-      fieldData.append("fieldLocation", values.fieldLocation);
-    values.fieldDetails &&
-      fieldData.append("fieldDetails", values.fieldDetails);
 
     //There was no trycatch in mern-classroom. Added them after talking to a mentor.
     try {
@@ -94,7 +150,7 @@ export default function NewField() {
   };
 
   if (values.redirect) {
-    return <Redirect to={"/fields"} />;
+    return <Redirect to={"/owner/my-fields"} />;
   }
   return (
     <div>
@@ -110,14 +166,12 @@ export default function NewField() {
             className={classes.input}
             id="icon-button-file"
             type="file"
-            style={{ display: "none" }}
           />
           <label htmlFor="icon-button-file">
             <Button
               variant="contained"
-              color="secondary"
               component="span"
-              style={{ marginBottom: 2 }}
+              className={classes.btn}
             >
               Upload Photo
               <FileUpload />
@@ -128,31 +182,90 @@ export default function NewField() {
           </span>
           <br />
           <TextField
-            id="fieldName"
+            id="bin"
+            label="Business Identification Number"
+            className={classes.textField}
+            value={values.bin}
+            onChange={handleChange("bin")}
+            margin="normal"
+          />
+          <br />
+          <TextField
+            id="name"
             label="Field Name"
             className={classes.textField}
-            value={values.fieldName}
-            onChange={handleChange("fieldName")}
+            value={values.name}
+            onChange={handleChange("name")}
             margin="normal"
           />
           <br />
           <TextField
-            id="fieldLocation"
+            id="location"
             label="Field Location"
             className={classes.textField}
-            value={values.fieldLocation}
-            onChange={handleChange("fieldLocation")}
+            value={values.location}
+            onChange={handleChange("location")}
             margin="normal"
           />
           <br />
           <TextField
-            id="fieldDetails"
+            id="description"
             label="Field Details"
+            multiline
+            rows="2"
             className={classes.textField}
-            value={values.fieldDetails}
-            onChange={handleChange("fieldDetails")}
+            value={values.description}
+            onChange={handleChange("description")}
             margin="normal"
           />
+          <br />
+          <FormControl className={classes.formControl}>
+            <InputLabel id="field-type" margin="dense">
+              Field Type
+            </InputLabel>
+            <Select
+              labelId="field-type"
+              name="fieldType"
+              id="fieldType"
+              value={values.fieldType}
+              onChange={handleChange("fieldType")}
+            >
+              <MenuItem value={"Grass Field"}>Grass Field</MenuItem>
+              <MenuItem value={"Turf"}>Artificial Grass/Turf</MenuItem>
+              <MenuItem value={"Indoor"}>Indoor</MenuItem>
+            </Select>
+          </FormControl>
+          <br />
+          <FormControl className={classes.formControl} margin="normal">
+            <InputLabel id="facilities-provided">Facilities</InputLabel>
+            <Select
+              labelId="facilities-provided"
+              id="facilities"
+              name="facilities"
+              multiple
+              value={values.facilities}
+              onChange={handleChange("facilities")}
+              input={<Input id="select-facilities" />}
+              renderValue={(selected) => (
+                <div className={classes.chip}>
+                  {selected.map((value) => (
+                    <Chip key={value} label={value} className={classes.chip} />
+                  ))}
+                </div>
+              )}
+              MenuProps={MenuProps}
+            >
+              {allFacilities.map((facility) => (
+                <MenuItem
+                  key={facility}
+                  value={facility}
+                  style={getStyles(facility, values.facilities, theme)}
+                >
+                  {facility}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <br />
           {values.error && (
             <Typography component="p" color="error">
