@@ -1,29 +1,5 @@
 import mongoose from "mongoose";
-
-const SlotSchema = new mongoose.Schema({
-  fieldSize: {
-    type: String,
-    required: [true, "Field Size for the slot is required"],
-  },
-  booked: {
-    type: Boolean,
-    default: false,
-  },
-  price: {
-    type: Number,
-    required: [true, "Price must be added for each slot"],
-  },
-  contact: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-  },
-  bookedBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-  },
-});
-
-const Slot = mongoose.model("Slot", SlotSchema);
+import autopopulate from "mongoose-autopopulate";
 
 const FieldSchema = new mongoose.Schema({
   bin: {
@@ -39,14 +15,19 @@ const FieldSchema = new mongoose.Schema({
   },
   fieldName: {
     type: String,
+    unique: true,
+    trim: true,
     required: [true, "Field name is required"],
   },
   location: {
     type: String,
+    unique: true,
+    trim: true,
     required: [true, "Location is required"],
   },
   description: {
     type: String,
+    trim: true,
     required: [true, "Details required"],
   },
   image: {
@@ -65,17 +46,17 @@ const FieldSchema = new mongoose.Schema({
   fieldOwner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
+    autopopulate: true,
   },
   facilities: {
     type: Array,
     of: String,
   },
-  slots: [SlotSchema],
   created: Date,
   updated: {
     type: Date,
     default: Date.now,
   },
 });
-
+FieldSchema.plugin(autopopulate);
 export default mongoose.model("Field", FieldSchema);

@@ -33,10 +33,7 @@ const create = (req, res) => {
 
 const fieldByID = async (req, res, next, id) => {
   try {
-    let field = await Field.findByID(id).populate(
-      "fieldOwner",
-      "_id name email phone"
-    );
+    const field = await Field.findById(req.params.fieldId);
     if (!field) {
       return res.status(400).json({
         error: "Field not found",

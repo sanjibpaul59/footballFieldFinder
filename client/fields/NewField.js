@@ -127,15 +127,21 @@ export default function NewField() {
 
     //There was no trycatch in mern-classroom. Added them after talking to a mentor.
     // try {
-    create({ userId: jwt.user._id }, { t: jwt.token }, fieldData).then(
-      (data) => {
-        if (data.error) {
-          setValues({ ...values, error: data.error });
-        } else {
-          setValues({ ...values, error: "", redirect: true });
-        }
+    create(
+      {
+        userId: jwt.user._id,
+      },
+      {
+        t: jwt.token,
+      },
+      fieldData
+    ).then((data) => {
+      if (data.error) {
+        setValues({ ...values, error: data.error });
+      } else {
+        setValues({ ...values, error: "", redirect: true });
       }
-    );
+    });
     // } catch (error) {
     //   console.log(error);
     // }

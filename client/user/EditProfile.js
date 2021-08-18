@@ -97,6 +97,7 @@ export default function EditProfile({ match }) {
   }, [match.params.userId]);
 
   const clickSubmit = () => {
+    console.log(jwt.token);
     const userData = new FormData();
     values.name && userData.append("name", values.name);
     values.email && userData.append("email", values.email);

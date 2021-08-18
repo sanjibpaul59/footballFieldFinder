@@ -4,11 +4,11 @@ const create = async (params, credentials, fieldData) => {
       method: "POST",
       headers: {
         Accept: "application/json",
-        Authorization: "Bearer" + credentials.t,
+        Authorization: "Bearer " + credentials.t,
       },
       body: fieldData,
     });
-    return await response.json();
+    return response.json();
   } catch (err) {
     console.log(err);
   }

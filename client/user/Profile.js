@@ -34,7 +34,6 @@ export default function Profile({ match }) {
   const [user, setUser] = useState({});
   const [redirectToSignin, setRedirectToSignin] = useState(false);
   const jwt = auth.isAuthenticated();
-
   useEffect(() => {
     const abortController = new AbortController();
     const signal = abortController.signal;

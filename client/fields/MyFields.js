@@ -107,7 +107,7 @@ export default function Myfields() {
                     />
                   </ListItemAvatar>
                   <ListItemText
-                    primary={field.name}
+                    primary={field.fieldName}
                     secondary={field.description}
                     className={classes.listText}
                   />
