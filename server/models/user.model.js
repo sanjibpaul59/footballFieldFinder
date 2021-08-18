@@ -28,6 +28,10 @@ const UserSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  manager: {
+    type: Boolean,
+    default: false,
+  },
   photo: {
     data: Buffer,
     contentType: String,

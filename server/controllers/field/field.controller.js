@@ -8,13 +8,13 @@ import defaultImg from "./../../../client/assets/images/default-field.jpg";
 const create = (req, res) => {
   let form = new formidable.IncomingForm();
   form.keepExtensions = true;
-  form.parse(req, async (err, fields, files) => {
+  form.parse(req, async (err, inputs, files) => {
     if (err) {
       return res.status(400).json({
         error: "Image could not be uploaded",
       });
     }
-    let field = new Field(fields);
+    let field = new Field(inputs);
     field.fieldOwner = req.profile;
     if (files.image) {
       field.image.data = fs.readFileSync(files.image.path);
@@ -33,7 +33,10 @@ const create = (req, res) => {
 
 const fieldByID = async (req, res, next, id) => {
   try {
-    let field = await Field.fieldByID(id).populate("fieldOwner", "_id name");
+    let field = await Field.findByID(id).populate(
+      "fieldOwner",
+      "_id name email phone"
+    );
     if (!field) {
       return res.status(400).json({
         error: "Field not found",
@@ -54,9 +57,7 @@ const read = (req, res) => {
 
 const list = async (req, res) => {
   try {
-    let fields = await Field.find().select(
-      "fieldName fieldLocation updated created"
-    );
+    let fields = await Field.find().select("name email phone updated created");
     res.json(fields);
   } catch (err) {
     return res.status(400).json({
@@ -76,8 +77,8 @@ const update = async (req, res) => {
     }
     let field = req.field;
     field = extend(field, fields);
-    if (fields.facilities) {
-      field.facilities = JSON.parse(fields.facilities);
+    if (fields.slots) {
+      field.slots = JSON.parse(fields.slots);
     }
     field.updated = Date.now();
     if (files.image) {
@@ -95,15 +96,15 @@ const update = async (req, res) => {
   });
 };
 
-const newFacility = async (req, res) => {
+const newSlot = async (req, res) => {
   try {
-    let facility = req.body.facility;
+    let slot = req.body.slot;
     let result = await Course.findByIdAndUpdate(
       req.field._id,
-      { $push: { facilities: facility }, updated: Date.now() },
+      { $push: { slots: slot }, updated: Date.now() },
       { new: true }
     )
-      .populate("fieldOwner", "_id name")
+      .populate("fieldOwner", "_id name email phone")
       .exec();
     res.json(result);
   } catch (err) {
@@ -144,7 +145,7 @@ const listByOwner = (req, res) => {
       });
     }
     res.json(fields);
-  }).populate("fieldOwner", "_id name");
+  }).populate("fieldOwner", "_id name email phone");
 };
 
 const listOpenFields = (req, res) => {
@@ -155,7 +156,7 @@ const listOpenFields = (req, res) => {
       });
     }
     res.json(fields);
-  }).populate("owner", "_id name");
+  }).populate("fieldOwner", "_id name email phone");
 };
 
 const image = (req, res, next) => {
@@ -181,6 +182,6 @@ export default {
   image,
   defaultImage,
   isOwner,
-  newFacility,
+  newSlot,
   fieldByID,
 };

@@ -1,19 +1,43 @@
 import mongoose from "mongoose";
-import autopopulate from "mongoose-autopopulate";
+
+const SlotSchema = new mongoose.Schema({
+  fieldSize: {
+    type: String,
+    required: [true, "Field Size for the slot is required"],
+  },
+  booked: {
+    type: Boolean,
+    default: false,
+  },
+  price: {
+    type: Number,
+    required: [true, "Price must be added for each slot"],
+  },
+  contact: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+  bookedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+});
+
+const Slot = mongoose.model("Slot", SlotSchema);
 
 const FieldSchema = new mongoose.Schema({
   bin: {
-    type: Number,
+    type: String,
     validate: {
       validator: function (v) {
         return v.length === 13 ? true : false;
       },
       message: (props) =>
-        `${props.value} is mot a valid Business Identification Number`,
+        `${props.value} is not a valid Business Identification Number`,
     },
     required: [true, "Business Identification Number is Required"],
   },
-  name: {
+  fieldName: {
     type: String,
     required: [true, "Field name is required"],
   },
@@ -28,7 +52,7 @@ const FieldSchema = new mongoose.Schema({
   image: {
     type: Buffer,
     contentType: String,
-    required: [true, "Please Upload an image of your field"],
+    // required: [true, "Please Upload an image of your field"],
   },
   fieldType: {
     type: String,
@@ -41,19 +65,17 @@ const FieldSchema = new mongoose.Schema({
   fieldOwner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    autopopulate: true,
   },
   facilities: {
     type: Array,
     of: String,
   },
+  slots: [SlotSchema],
   created: Date,
   updated: {
     type: Date,
     default: Date.now,
   },
 });
-
-FieldSchema.plugin(autopopulate);
 
 export default mongoose.model("Field", FieldSchema);
