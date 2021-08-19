@@ -1,28 +1,24 @@
-import Field from "../../models/field.model";
+import Field from "../models/field.model";
 import extend from "lodash/extend";
-import errorHandler from "./../../helpers/dbErrorHandler";
 import fs from "fs";
+import errorHandler from "../helpers/dbErrorHandler";
 import formidable from "formidable";
-import defaultImg from "./../../../client/assets/images/default-field.jpg";
+import defaultImage from "../../client/assets/images/defaultfield.jpg";
 
-const create = (req, res) => {
+const create = async (req, res) => {
   let form = new formidable.IncomingForm();
   form.keepExtensions = true;
-  form.multiples = true;
-  form.parse(req, async (err, inputs, files) => {
+  form.parse(req, async (err, fields, files) => {
     if (err) {
       return res.status(400).json({
         error: "Image could not be uploaded",
       });
     }
-
-    let field = new Field(inputs);
+    let field = new Field(fields);
     field.fieldOwner = req.profile;
     if (files.image) {
       field.image.data = fs.readFileSync(files.image.path);
       field.image.contentType = files.image.type;
-    }
-    if (files.facilities) {
     }
     try {
       let result = await field.save();
@@ -37,7 +33,10 @@ const create = (req, res) => {
 
 const fieldByID = async (req, res, next, id) => {
   try {
-    const field = await Field.findById(req.params.fieldId);
+    const field = await Field.findById(id).populate(
+      "fieldOwner",
+      "_id name email phone"
+    );
     if (!field) {
       return res.status(400).json({
         error: "Field not found",
@@ -160,7 +159,7 @@ const listOpenFields = (req, res) => {
   }).populate("fieldOwner", "_id name email phone");
 };
 
-const image = (req, res, next) => {
+const photo = (req, res, next) => {
   if (req.field.image.data) {
     res.set("Content-Type", req.field.image.contentType);
     return res.send(req.field.image.data);
@@ -168,8 +167,8 @@ const image = (req, res, next) => {
   next();
 };
 
-const defaultImage = (req, res) => {
-  return res.sendFile(process.cwd() + defaultImg);
+const defaultPhoto = (req, res) => {
+  return res.sendFile(process.cwd() + defaultImage);
 };
 
 export default {
@@ -180,8 +179,8 @@ export default {
   list,
   listOpenFields,
   listByOwner,
-  image,
-  defaultImage,
+  photo,
+  defaultPhoto,
   isOwner,
   newSlot,
   fieldByID,

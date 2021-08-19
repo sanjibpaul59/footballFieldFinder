@@ -74,10 +74,6 @@ export default function Myfields() {
     };
   }, []);
 
-  const imageUrl = field._id
-    ? `/api/fields/photo/${field._id}?${new Date().getTime()}`
-    : `/api/fields/defaultImg`;
-
   if (redirectToSignin) {
     return <Redirect to="/signin" />;
   }
@@ -100,7 +96,15 @@ export default function Myfields() {
               <Link to={"/owner/field/" + field._id} key={i}>
                 <ListItem button>
                   <ListItemAvatar>
-                    <Avatar src={imageUrl} className={classes.avatar} />
+                    <Avatar
+                      src={
+                        "/api/fields/image/" +
+                        field._id +
+                        "?" +
+                        new Date().getTime()
+                      }
+                      className={classes.avatar}
+                    />
                   </ListItemAvatar>
                   <ListItemText
                     primary={field.fieldName}

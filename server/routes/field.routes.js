@@ -1,5 +1,5 @@
 import express from "express";
-import fieldCtrl from "../controllers/field/field.controller";
+import fieldCtrl from "../controllers/field.controller";
 import userCtrl from "../controllers/user.controller";
 import authCtrl from "../controllers/auth.controller";
 
@@ -22,13 +22,13 @@ router
   );
 
 router
-  .route("/api/fields/photo/:fieldId")
-  .get(fieldCtrl.image, fieldCtrl.defaultImage);
+  .route("/api/fields/image/:fieldId")
+  .get(fieldCtrl.photo, fieldCtrl.defaultPhoto);
 
-router.route("/api/fields/defaultImage").get(fieldCtrl.defaultImage);
+router.route("/api/fields/defaultPhoto").get(fieldCtrl.defaultPhoto);
 
 router
-  .route("/api/fields/:fieldId/slots/new")
+  .route("/api/fields/:fieldId/slot/new")
   .put(authCtrl.requireSignin, fieldCtrl.isOwner, fieldCtrl.newSlot);
 
 router

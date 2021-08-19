@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import autopopulate from "mongoose-autopopulate";
 
 const FieldSchema = new mongoose.Schema({
   bin: {
@@ -31,7 +30,7 @@ const FieldSchema = new mongoose.Schema({
     required: [true, "Details required"],
   },
   image: {
-    type: Buffer,
+    data: Buffer,
     contentType: String,
     // required: [true, "Please Upload an image of your field"],
   },
@@ -46,7 +45,6 @@ const FieldSchema = new mongoose.Schema({
   fieldOwner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    autopopulate: true,
   },
   facilities: [String],
   created: Date,
@@ -55,5 +53,5 @@ const FieldSchema = new mongoose.Schema({
     default: Date.now,
   },
 });
-FieldSchema.plugin(autopopulate);
+
 export default mongoose.model("Field", FieldSchema);
