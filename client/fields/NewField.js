@@ -116,13 +116,14 @@ export default function NewField() {
   };
 
   const clickSubmit = () => {
+    console.log(values.facilities);
     let fieldData = new FormData();
     values.bin && fieldData.append("bin", values.bin);
     values.fieldName && fieldData.append("fieldName", values.fieldName);
     values.location && fieldData.append("location", values.location);
     values.description && fieldData.append("description", values.description);
     values.fieldType && fieldData.append("fieldType", values.fieldType);
-    values.facilities && fieldData.append("facilities", values.facilities);
+    values.facilities && fieldData.getAll("facilities", values.facilitities);
     values.image && fieldData.append("image", values.image);
 
     //There was no trycatch in mern-classroom. Added them after talking to a mentor.

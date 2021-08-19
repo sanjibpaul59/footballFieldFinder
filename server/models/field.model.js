@@ -48,10 +48,7 @@ const FieldSchema = new mongoose.Schema({
     ref: "User",
     autopopulate: true,
   },
-  facilities: {
-    type: Array,
-    of: String,
-  },
+  facilities: [String],
   created: Date,
   updated: {
     type: Date,

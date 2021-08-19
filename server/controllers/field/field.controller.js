@@ -8,17 +8,21 @@ import defaultImg from "./../../../client/assets/images/default-field.jpg";
 const create = (req, res) => {
   let form = new formidable.IncomingForm();
   form.keepExtensions = true;
+  form.multiples = true;
   form.parse(req, async (err, inputs, files) => {
     if (err) {
       return res.status(400).json({
         error: "Image could not be uploaded",
       });
     }
+
     let field = new Field(inputs);
     field.fieldOwner = req.profile;
     if (files.image) {
       field.image.data = fs.readFileSync(files.image.path);
       field.image.contentType = files.image.type;
+    }
+    if (files.facilities) {
     }
     try {
       let result = await field.save();
