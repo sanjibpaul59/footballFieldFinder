@@ -1,5 +1,42 @@
 import mongoose from "mongoose";
 
+const SlotSchema = new mongoose.Schema({
+  price: {
+    type: Number,
+    required: [true, "Cost of Slot is required"],
+  },
+  bookingStatus: {
+    type: Boolean,
+    default: false,
+  },
+  day: {
+    type: String,
+    enum: [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ],
+  },
+  startTime: {
+    type: Date,
+    // required: [true, "Start Time is required"],
+  },
+  endTime: {
+    type: Date,
+    // required: [true, "End Time is required"],
+  },
+  duration: {
+    type: Number,
+    default: null,
+  },
+});
+
+const Slot = mongoose.model("Slot", SlotSchema);
+
 const FieldSchema = new mongoose.Schema({
   bin: {
     type: String,
@@ -38,14 +75,19 @@ const FieldSchema = new mongoose.Schema({
     type: String,
     required: [true, "Field Type is required"],
   },
+  fieldSize: {
+    type: String,
+    required: [true, "Field size is required"],
+  },
   openForBooking: {
     type: Boolean,
     default: false,
   },
   fieldOwner: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: mongoose.Schema.ObjectId,
     ref: "User",
   },
+  slots: [SlotSchema],
   facilities: [String],
   created: Date,
   updated: {

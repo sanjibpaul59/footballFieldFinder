@@ -74,6 +74,7 @@ export default function NewField() {
     location: "",
     description: "",
     fieldType: "",
+    fieldSize: "",
     image: "",
     redirect: false,
     error: "",
@@ -92,6 +93,7 @@ export default function NewField() {
     values.location && fieldData.append("location", values.location);
     values.description && fieldData.append("description", values.description);
     values.fieldType && fieldData.append("fieldType", values.fieldType);
+    values.fieldSize && fieldData.append("fieldSize", values.fieldSize);
     values.image && fieldData.append("image", values.image);
 
     create(
@@ -196,6 +198,23 @@ export default function NewField() {
               <MenuItem value={"Grass Field"}>Grass Field</MenuItem>
               <MenuItem value={"Turf"}>Artificial Grass/Turf</MenuItem>
               <MenuItem value={"Indoor"}>Indoor</MenuItem>
+            </Select>
+          </FormControl>
+          <br />
+          <FormControl className={classes.formControl}>
+            <InputLabel id="field-size" margin="dense">
+              Field Size
+            </InputLabel>
+            <Select
+              labelId="field-size"
+              name="fieldSize"
+              id="fieldSize"
+              value={values.fieldSize}
+              onChange={handleChange("fieldSize")}
+            >
+              <MenuItem value={"small"}>Small </MenuItem>
+              <MenuItem value={"medium"}>Medium </MenuItem>
+              <MenuItem value={"large"}>large</MenuItem>
             </Select>
           </FormControl>
           <br />

@@ -13,17 +13,19 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import ListItemText from "@material-ui/core/ListItemText";
 import Avatar from "@material-ui/core/Avatar";
+import Divider from "@material-ui/core/Divider";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-
 import { makeStyles } from "@material-ui/core";
 import { read, update } from "./api-field.js";
 import { Link, Redirect } from "react-router-dom";
 import auth from "../auth/auth-helper";
 import DeleteField from "./DeleteField";
 import NewSlot from "./NewSlot.js";
+import { bookingStats } from "./../booking/api-booking";
+import Book from "./../booking/Book";
 
 const useStyles = makeStyles((theme) => ({
   root: theme.mixins.gutters({
@@ -89,10 +91,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Field({ match }) {
+  const classes = useStyles();
+  const [stats, setStats] = useState({});
   const [field, setField] = useState({ fieldOwner: {} });
   const [values, setValues] = useState({
     error: "",
-    rediret: false,
+    redirect: false,
   });
   const [open, setOpen] = useState(false);
   const jwt = auth.isAuthenticated();
@@ -117,6 +121,26 @@ export default function Field({ match }) {
     };
   }, [match.params.fieldId]);
 
+  useEffect(() => {
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+
+    bookingStats(
+      { fieldId: match.params.fieldId },
+      { t: jwt.toke },
+      signal
+    ).then((data) => {
+      if (data.error) {
+        setValues({ ...values, error: data.error });
+      } else {
+        setStats(data);
+      }
+    });
+    return function cleanup() {
+      abortController.abort();
+    };
+  }, [match.params.fieldId]);
+
   const removeField = (field) => {
     setValues({ ...values, redirect: true });
   };
@@ -130,41 +154,135 @@ export default function Field({ match }) {
     }
   };
 
-  const openForBooking = () => {};
+  const openForBooking = () => {
+    let fieldData = new FormData();
+    fieldData.append("openForBooking", true);
+    update(
+      {
+        fieldId: match.params.fieldId,
+      },
+      {
+        t: jwt.token,
+      },
+      fieldData
+    ).then((data) => {
+      if (data && data.error) {
+        setValues({ ...values, error: data.error });
+      } else {
+        setField({ ...field, openForBooking: true });
+        setOpen(false);
+      }
+    });
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+  if (values.redirect) {
+    return <Redirect to={"/owner/my-fields"} />;
+  }
 
   const imageUrl = field._id
-    ? `/api/fields/photo/${field._id}?${new Date().getTime()}`
-    : `/api/fields/defaultImage`;
+    ? `/api/fields/image/${field._id}?${new Date().getTime()}`
+    : `/api/fields/defaultPhoto`;
+
   return (
-    <Card>
-      <CardHeader
-        title={field.fieldName}
-        subheader={
-          <div>
-            <Link to={"/user/" + field.fieldOwner._id}>
-              {" "}
-              By {field.fieldOwner.name}
-            </Link>
-            <span>{field.location}</span>
-            <span>{field.fieldOwner.phone}</span>
+    <div className={classes.root}>
+      <Card className={classes.card}>
+        <CardHeader
+          title={field.fieldName}
+          subheader={
+            <div>
+              <Link
+                to={"/user/" + field.fieldOwner._id}
+                className={classes.sub}
+              >
+                {" "}
+                By {field.fieldOwner.name}
+              </Link>
+              <span className={classes.category}>
+                Location: {field.location}
+              </span>
+              <span className={classes.category}>
+                Contact: {field.fieldOwner.phone}
+              </span>
+            </div>
+          }
+          action={
+            <>
+              {auth.isAuthenticated().user &&
+                auth.isAuthenticated().user._id == field.fieldOwner._id && (
+                  <span className={classes.action}>
+                    <Link to={"/owner/my-fields/edit/" + field._id}>
+                      <IconButton aria-label="Edit" color="secondary">
+                        <Edit />
+                      </IconButton>
+                    </Link>
+                    {!field.openForBooking ? (
+                      <>
+                        <Button
+                          color="secondary"
+                          variant="outlined"
+                          onClick={clickOpenForBooking}
+                        >
+                          {field.slots.length == 0
+                            ? "Add atleast 1 slot to open for Booking"
+                            : "Open for Booking"}
+                        </Button>
+                        <DeleteField field={field} onRemove={removeField} />
+                      </>
+                    ) : (
+                      <Button color="primary" variant="outlined">
+                        Opened
+                      </Button>
+                    )}
+                  </span>
+                )}
+              {field.openForBooking && (
+                <div>
+                  <span className={classes.statSpan}>
+                    <PeopleIcon /> {stats.totalBooked} booked{" "}
+                  </span>
+                  <span className={classes.statSpan}>
+                    <CompletedIcon /> {stats.totalPlayed} times{" "}
+                  </span>
+                </div>
+              )}
+            </>
+          }
+        />
+        <div className={classes.flex}>
+          <CardMedia
+            className={classes.media}
+            image={imageUrl}
+            title={field.fieldName}
+          />
+          <div className={classes.details}>
+            <Typography className={classes.subheading} variant="body1">
+              {field.description}
+            </Typography>
+            {field.openForBooking && (
+              <div className={classes.enroll}>
+                <Book fieldId={field._id} />
+              </div>
+            )}
           </div>
-        }
-      />
-      <CardMedia image={imageUrl} title={field.fieldName} />
-      <div>
-        <Typography variant="body1">{field.description}</Typography>
-      </div>
-      {auth.isAuthenticated().user &&
-        auth.isAuthenticated().user._id == field.fieldOwner._id && (
-          <span>
-            {" "}
-            <Link to={"/owner/my-field/edit" + field._id}>
-              <IconButton aria-label="Edit" color="secondary">
-                <Edit />
-              </IconButton>
-            </Link>{" "}
-          </span>
-        )}
-    </Card>
+        </div>
+        <Divider />
+
+        <div></div>
+        {auth.isAuthenticated().user &&
+          auth.isAuthenticated().user._id == field.fieldOwner._id && (
+            <span>
+              {" "}
+              <Link to={"/owner/my-field/edit" + field._id}>
+                <IconButton aria-label="Edit" color="secondary">
+                  <Edit />
+                </IconButton>
+              </Link>{" "}
+            </span>
+          )}
+      </Card>
+    </div>
   );
 }
