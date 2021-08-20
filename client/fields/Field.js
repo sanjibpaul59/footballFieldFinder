@@ -270,8 +270,47 @@ export default function Field({ match }) {
         </div>
         <Divider />
 
-        <div></div>
-        {auth.isAuthenticated().user &&
+        <div>
+          <CardHeader
+            title={
+              <Typography variant="h6" className={classes.subheading}>
+                Slots
+              </Typography>
+            }
+            subheader={
+              <Typography variant="body1" className={classes.subheading}>
+                {" "}
+                {field.slots && field.slots.length} slots{" "}
+              </Typography>
+            }
+            action={
+              auth.isAuthenticated().user &&
+              auth.isAuthenticated().user._id == field.fieldOwner._id &&
+              !field.openForBooking(
+                <span className={classes.action}>
+                  <NewSlot fieldId={course._id} addSlot={addSlot} />
+                </span>
+              )
+            }
+          />
+          <List>
+            {field.slots &&
+              field.slots.map((slots, index) => {
+                return (
+                  <span key={index}>
+                    <ListItem>
+                      <ListItemAvatar>
+                        <Avatar>{index + 1}</Avatar>
+                      </ListItemAvatar>
+                      <ListItemText primary={slot.price} />
+                    </ListItem>
+                    <Divider variant="inset" component="li" />
+                  </span>
+                );
+              })}
+          </List>
+        </div>
+        {/* {auth.isAuthenticated().user &&
           auth.isAuthenticated().user._id == field.fieldOwner._id && (
             <span>
               {" "}
@@ -281,8 +320,32 @@ export default function Field({ match }) {
                 </IconButton>
               </Link>{" "}
             </span>
-          )}
+          )} */}
       </Card>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title">Open Field For Booking</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1">
+            Opening Field for booking will make this field live to players for
+            booking slots.
+          </Typography>
+          <Typography variant="body1">
+            Make sure at least one slot is added
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color={primary} variant="contained">
+            Cancel
+          </Button>
+          <Button onClick={openForBooking} color={primary} variant="contained">
+            Publish
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
