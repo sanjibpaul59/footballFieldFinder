@@ -46,6 +46,7 @@ export default function NewSlot(props) {
       },
       slot
     ).then((data) => {
+      console.log(data);
       if (data && data.error) {
         setValues({ ...values, error: data.error });
       } else {
@@ -55,6 +56,7 @@ export default function NewSlot(props) {
           price: "",
           day: "",
           startTime: "",
+          // redirect:true,
           endTime: "",
         });
         setOpen(false);

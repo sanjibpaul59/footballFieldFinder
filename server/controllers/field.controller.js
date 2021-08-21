@@ -99,7 +99,7 @@ const update = async (req, res) => {
 const newSlot = async (req, res) => {
   try {
     let slot = req.body.slot;
-    let result = await Course.findByIdAndUpdate(
+    let result = await Field.findByIdAndUpdate(
       req.field._id,
       { $push: { slots: slot }, updated: Date.now() },
       { new: true }
@@ -108,6 +108,7 @@ const newSlot = async (req, res) => {
       .exec();
     res.json(result);
   } catch (err) {
+    console.log(err);
     return res.status(400).json({
       error: errorHandler.getErrorMessage(err),
     });

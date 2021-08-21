@@ -1,7 +1,7 @@
 {
-  "name": "intern-project",
+  "name": "football-field-finder",
   "version": "1.0.0",
-  "description": "template from skeleton",
+  "description": "Football field finfing web application",
   "author": "Sanjib",
   "license": "MIT",
   "scripts": {
