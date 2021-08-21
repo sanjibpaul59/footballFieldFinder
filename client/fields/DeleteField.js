@@ -22,7 +22,7 @@ export default function DeleteField(props) {
   const deleteField = () => {
     remove(
       {
-        fieldId: props.fieldId._id,
+        fieldId: props.field._id,
       },
       { t: jwt.token }
     ).then((data) => {

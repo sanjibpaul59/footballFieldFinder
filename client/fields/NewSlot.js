@@ -29,9 +29,8 @@ export default function NewSlot(props) {
   const handleChange = (name) => (event) => {
     setValues({ ...values, [name]: event.target.value });
   };
-
+  const jwt = auth.isAuthenticated();
   const clickSubmit = () => {
-    const jwt = auth.isAuthenticated();
     const slot = {
       price: values.price || undefined,
       day: values.day || undefined,
@@ -100,8 +99,6 @@ export default function NewSlot(props) {
               margin="dense"
               label="Day"
               type="text"
-              multiline
-              rows="5"
               fullWidth
               value={values.day}
               onChange={handleChange("day")}
@@ -109,7 +106,6 @@ export default function NewSlot(props) {
             <br />
             <TextField
               margin="dense"
-              label="Start Time"
               type="date"
               fullWidth
               value={values.startTime}
@@ -118,7 +114,6 @@ export default function NewSlot(props) {
             <br />
             <TextField
               margin="dense"
-              label="End Time"
               type="date"
               fullWidth
               value={values.endTime}

@@ -130,7 +130,7 @@ export default function Field({ match }) {
       { t: jwt.toke },
       signal
     ).then((data) => {
-      if (data.error) {
+      if (data && data.error) {
         setValues({ ...values, error: data.error });
       } else {
         setStats(data);
@@ -200,9 +200,9 @@ export default function Field({ match }) {
                 {" "}
                 By {field.fieldOwner.name}
               </Link>
-              <span className={classes.category}>
+              {/* <span className={classes.category}>
                 Location: {field.location}
-              </span>
+              </span> */}
               <span className={classes.category}>
                 Contact: {field.fieldOwner.phone}
               </span>
@@ -213,7 +213,7 @@ export default function Field({ match }) {
               {auth.isAuthenticated().user &&
                 auth.isAuthenticated().user._id == field.fieldOwner._id && (
                   <span className={classes.action}>
-                    <Link to={"/owner/my-fields/edit/" + field._id}>
+                    <Link to={"/owner/my-field/edit/" + field._id}>
                       <IconButton aria-label="Edit" color="secondary">
                         <Edit />
                       </IconButton>
@@ -286,16 +286,16 @@ export default function Field({ match }) {
             action={
               auth.isAuthenticated().user &&
               auth.isAuthenticated().user._id == field.fieldOwner._id &&
-              !field.openForBooking(
+              !field.openForBooking && (
                 <span className={classes.action}>
-                  <NewSlot fieldId={course._id} addSlot={addSlot} />
+                  <NewSlot fieldId={field._id} addSlot={addSlot} />
                 </span>
               )
             }
           />
           <List>
             {field.slots &&
-              field.slots.map((slots, index) => {
+              field.slots.map((slot, index) => {
                 return (
                   <span key={index}>
                     <ListItem>
@@ -338,10 +338,10 @@ export default function Field({ match }) {
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color={primary} variant="contained">
+          <Button onClick={handleClose} color="primary" variant="contained">
             Cancel
           </Button>
-          <Button onClick={openForBooking} color={primary} variant="contained">
+          <Button onClick={openForBooking} color="primary" variant="contained">
             Publish
           </Button>
         </DialogActions>

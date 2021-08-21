@@ -34,7 +34,7 @@ router
 router
   .route("/api/fields/:fieldId")
   .get(fieldCtrl.read)
-  .post(authCtrl.requireSignin, fieldCtrl.isOwner, fieldCtrl.update)
+  .put(authCtrl.requireSignin, fieldCtrl.isOwner, fieldCtrl.update)
   .delete(authCtrl.requireSignin, fieldCtrl.isOwner, fieldCtrl.remove);
 
 router.param("fieldId", fieldCtrl.fieldByID);

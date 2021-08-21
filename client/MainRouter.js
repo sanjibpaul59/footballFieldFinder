@@ -8,6 +8,7 @@ import Profile from "./user/Profile";
 import NewField from "./fields/NewField";
 import Field from "./fields/Field";
 import Fields from "./fields/Fields";
+import EditField from "./fields/EditField";
 import PrivateRoute from "./auth/PrivateRoute";
 import Menu from "./core/Menu";
 import Myfields from "./fields/MyFields";
@@ -27,8 +28,12 @@ const MainRouter = () => {
         <Route path="/fields" component={Fields} />
         <Route path="/field/:fieldId" component={Field} />
         //For the field owners
-        <PrivateRoute path="/owner/add-field" component={NewField} />
         <PrivateRoute path="/owner/my-fields" component={Myfields} />
+        <PrivateRoute
+          path="/owner/my-field/edit/:fieldId"
+          component={EditField}
+        />
+        <PrivateRoute path="/owner/add-field" component={NewField} />
         <PrivateRoute path="/owner/field/:fieldId" component={Field} />
       </Switch>
     </div>
