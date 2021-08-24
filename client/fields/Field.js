@@ -154,7 +154,7 @@ export default function Field({ match }) {
     }
   };
 
-  const openForBooking = () => {
+  const openBooking = () => {
     let fieldData = new FormData();
     fieldData.append("openForBooking", true);
     update(
@@ -341,7 +341,7 @@ export default function Field({ match }) {
           <Button onClick={handleClose} color="primary" variant="contained">
             Cancel
           </Button>
-          <Button onClick={openForBooking} color="primary" variant="contained">
+          <Button onClick={openBooking} color="primary" variant="contained">
             Publish
           </Button>
         </DialogActions>
