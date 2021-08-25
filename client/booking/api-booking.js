@@ -1,4 +1,4 @@
-export const create = async (params, credentials) => {
+const create = async (params, credentials) => {
   try {
     let response = await fetch("/api/booking/new" + params.fieldId, {
       method: "POST",
@@ -14,7 +14,7 @@ export const create = async (params, credentials) => {
   }
 };
 
-export const listBooked = async (credentials, signal) => {
+const listBooked = async (credentials, signal) => {
   try {
     let response = await fetch("/api/booking/booked", {
       method: "GET",
@@ -29,8 +29,7 @@ export const listBooked = async (credentials, signal) => {
     console.log(err);
   }
 };
-
-export const bookingStats = async (params, credentials, signal) => {
+const bookingStats = async (params, credentials, signal) => {
   try {
     let response = await fetch("/api/booking/stats/" + params.fieldId, {
       method: "GET",
@@ -45,3 +44,5 @@ export const bookingStats = async (params, credentials, signal) => {
     console.log(err);
   }
 };
+
+export { create, listBooked, bookingStats };

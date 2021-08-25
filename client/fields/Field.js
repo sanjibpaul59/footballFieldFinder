@@ -1,31 +1,33 @@
-import React, { useState, useEffect } from "react";
-import Card from "@material-ui/core/Card";
-import CardHeader from "@material-ui/core/CardHeader";
-import CardMedia from "@material-ui/core/CardMedia";
-import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
-import Edit from "@material-ui/icons/Edit";
-import PeopleIcon from "@material-ui/icons/Group";
-import CompletedIcon from "@material-ui/icons/VerifiedUser";
-import Button from "@material-ui/core/Button";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import ListItemText from "@material-ui/core/ListItemText";
-import Avatar from "@material-ui/core/Avatar";
-import Divider from "@material-ui/core/Divider";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import { makeStyles } from "@material-ui/core";
-import { read, update } from "./api-field.js";
-import { Link, Redirect } from "react-router-dom";
-import auth from "../auth/auth-helper";
-import DeleteField from "./DeleteField";
-import NewSlot from "./NewSlot.js";
-import { bookingStats } from "./../booking/api-booking";
-import Book from "./../booking/Book";
+import React, { useState, useEffect } from "react"
+import Card from "@material-ui/core/Card"
+import CardHeader from "@material-ui/core/CardHeader"
+import CardMedia from "@material-ui/core/CardMedia"
+import Typography from "@material-ui/core/Typography"
+import IconButton from "@material-ui/core/IconButton"
+import Edit from "@material-ui/icons/Edit"
+import PeopleIcon from "@material-ui/icons/Group"
+import CompletedIcon from "@material-ui/icons/VerifiedUser"
+import Button from "@material-ui/core/Button"
+import List from "@material-ui/core/List"
+import ListItem from "@material-ui/core/ListItem"
+import ListItemAvatar from "@material-ui/core/ListItemAvatar"
+import ListItemText from "@material-ui/core/ListItemText"
+import Avatar from "@material-ui/core/Avatar"
+import Divider from "@material-ui/core/Divider"
+import Dialog from "@material-ui/core/Dialog"
+import DialogActions from "@material-ui/core/DialogActions"
+import DialogContent from "@material-ui/core/DialogContent"
+import DialogTitle from "@material-ui/core/DialogTitle"
+import MaterialTable, { MTableToolbar } from "material-table"
+import Chip from "@material-ui/core/Chip"
+import { makeStyles } from "@material-ui/core"
+import { read, update } from "./api-field.js"
+import { Link, Redirect } from "react-router-dom"
+import auth from "../auth/auth-helper"
+import DeleteField from "./DeleteField"
+import NewSlot from "./NewSlot.js"
+import { bookingStats } from "./../booking/api-booking.js"
+import Book from "./../booking/Book"
 
 const useStyles = makeStyles((theme) => ({
   root: theme.mixins.gutters({
@@ -88,22 +90,22 @@ const useStyles = makeStyles((theme) => ({
   enroll: {
     float: "right",
   },
-}));
+}))
 
 export default function Field({ match }) {
-  const classes = useStyles();
-  const [stats, setStats] = useState({});
-  const [field, setField] = useState({ fieldOwner: {} });
+  const classes = useStyles()
+  const [stats, setStats] = useState({})
+  const [field, setField] = useState({ fieldOwner: {} })
   const [values, setValues] = useState({
     error: "",
     redirect: false,
-  });
-  const [open, setOpen] = useState(false);
-  const jwt = auth.isAuthenticated();
+  })
+  const [open, setOpen] = useState(false)
+  const jwt = auth.isAuthenticated()
 
   useEffect(() => {
-    const abortController = new AbortController();
-    const signal = abortController.signal;
+    const abortController = new AbortController()
+    const signal = abortController.signal
     read(
       {
         fieldId: match.params.fieldId,
@@ -111,52 +113,52 @@ export default function Field({ match }) {
       signal
     ).then((data) => {
       if (data.error) {
-        setValues({ ...values, error: data.error });
+        setValues({ ...values, error: data.error })
       } else {
-        setField(data);
+        setField(data)
       }
-    });
+    })
     return function cleanup() {
-      abortController.abort();
-    };
-  }, [match.params.fieldId]);
+      abortController.abort()
+    }
+  }, [match.params.fieldId])
 
   useEffect(() => {
-    const abortController = new AbortController();
-    const signal = abortController.signal;
+    const abortController = new AbortController()
+    const signal = abortController.signal
 
     bookingStats(
       { fieldId: match.params.fieldId },
-      { t: jwt.toke },
+      { t: jwt.token },
       signal
     ).then((data) => {
       if (data && data.error) {
-        setValues({ ...values, error: data.error });
+        setValues({ ...values, error: data.error })
       } else {
-        setStats(data);
+        setStats(data)
       }
-    });
+    })
     return function cleanup() {
-      abortController.abort();
-    };
-  }, [match.params.fieldId]);
+      abortController.abort()
+    }
+  }, [match.params.fieldId])
 
   const removeField = (field) => {
-    setValues({ ...values, redirect: true });
-  };
+    setValues({ ...values, redirect: true })
+  }
   const addSlot = (field) => {
-    setField(field);
-  };
+    setField(field)
+  }
 
   const clickOpenForBooking = () => {
     if (field.slots.length > 0) {
-      setOpen(true);
+      setOpen(true)
     }
-  };
+  }
 
   const openBooking = () => {
-    let fieldData = new FormData();
-    fieldData.append("openForBooking", true);
+    let fieldData = new FormData()
+    fieldData.append("openForBooking", true)
     update(
       {
         fieldId: match.params.fieldId,
@@ -167,24 +169,24 @@ export default function Field({ match }) {
       fieldData
     ).then((data) => {
       if (data && data.error) {
-        setValues({ ...values, error: data.error });
+        setValues({ ...values, error: data.error })
       } else {
-        setField({ ...field, openForBooking: true });
-        setOpen(false);
+        setField({ ...field, openForBooking: true })
+        setOpen(false)
       }
-    });
-  };
+    })
+  }
 
   const handleClose = () => {
-    setOpen(false);
-  };
+    setOpen(false)
+  }
   if (values.redirect) {
-    return <Redirect to={"/owner/my-fields"} />;
+    return <Redirect to={"/owner/my-fields"} />
   }
 
   const imageUrl = field._id
     ? `/api/fields/image/${field._id}?${new Date().getTime()}`
-    : `/api/fields/defaultPhoto`;
+    : `/api/fields/defaultPhoto`
 
   return (
     <div className={classes.root}>
@@ -271,6 +273,89 @@ export default function Field({ match }) {
         <Divider />
 
         <div>
+          <MaterialTable
+            title="Slots"
+            columns={[
+              { title: "Day", field: "day" },
+              { title: "Time", field: "time" },
+              { title: "Duration", field: "duration" },
+              { title: "Price", field: "price" },
+            ]}
+            data={[
+              {
+                day: "8/26/2021",
+                time: "4.00",
+                duration: "1.30",
+                price: "2500",
+              },
+            ]}
+            components={{
+              Actions: () => {
+                return (
+                  auth.isAuthenticated().user &&
+                  auth.isAuthenticated().user._id == field.fieldOwner._id &&
+                  !field.openForBooking && (
+                    <span className={classes.action}>
+                      <NewSlot fieldId={field._id} addSlot={addSlot} />
+                    </span>
+                  )
+                )
+              },
+              Toolbar: (props) => (
+                <div>
+                  <MTableToolbar {...props} />
+                  <div style={{ padding: "0px 10px" }}>
+                    <Chip
+                      label="Search Bar"
+                      color="secondary"
+                      style={{ marginRight: 5, marginLeft: 10 }}
+                    />
+                  </div>
+                </div>
+              ),
+            }}
+            //icons with error button in button
+            // icons={{
+            //   Add: () =>
+            //     auth.isAuthenticated().user &&
+            //     auth.isAuthenticated().user._id == field.fieldOwner._id &&
+            //     !field.openForBooking && (
+            //       <span className={classes.action}>
+            //         <NewSlot fieldId={field._id} addSlot={addSlot} />
+            //       </span>
+            //     ),
+            // }}
+            //toolbar actions
+            // actions={[
+            //   auth.isAuthenticated().user &&
+            //     auth.isAuthenticated().user._id == field.fieldOwner._id &&
+            //     !field.openForBooking && {
+            //       icon: () => <NewSlot fieldId={field._id} addSlot={addSlot} />,
+            //       isFreeAction: true,
+            //     },
+            // ]}
+
+            //row actions
+            // actions={[
+            //   {
+            //     icon: "save",
+            //     tooltip: "Book",
+            //     onClick: (event, rowData) => alert("You booked" + rowData.time),
+            //   },
+            //   (rowData) => ({
+            //     icon: "delete",
+            //     tooltip: "Cancel Booking",
+            //     onClick: (event, rowData) =>
+            //       confirm("You want to delete " + rowData.price),
+            //     disabled: rowData.day == null,
+            //   }),
+            // ]}
+            options={{ actionsColumnIndex: -1, search: false }}
+          />
+        </div>
+        <Divider />
+
+        <div>
           <CardHeader
             title={
               <Typography variant="h6" className={classes.subheading}>
@@ -306,21 +391,10 @@ export default function Field({ match }) {
                     </ListItem>
                     <Divider variant="inset" component="li" />
                   </span>
-                );
+                )
               })}
           </List>
         </div>
-        {/* {auth.isAuthenticated().user &&
-          auth.isAuthenticated().user._id == field.fieldOwner._id && (
-            <span>
-              {" "}
-              <Link to={"/owner/my-field/edit" + field._id}>
-                <IconButton aria-label="Edit" color="secondary">
-                  <Edit />
-                </IconButton>
-              </Link>{" "}
-            </span>
-          )} */}
       </Card>
       <Dialog
         open={open}
@@ -347,5 +421,5 @@ export default function Field({ match }) {
         </DialogActions>
       </Dialog>
     </div>
-  );
+  )
 }

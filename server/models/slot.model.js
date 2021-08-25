@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"
 
 const SlotSchema = new mongoose.Schema({
   price: {
@@ -21,6 +21,14 @@ const SlotSchema = new mongoose.Schema({
       "Saturday",
     ],
   },
+  startDate: {
+    type: Date,
+    // required: [true, "Start Time is required"],
+  },
+  endDate: {
+    type: Date,
+    // required: [true, "End Time is required"],
+  },
   startTime: {
     type: Date,
     required: [true, "Start Time is required"],
@@ -33,6 +41,6 @@ const SlotSchema = new mongoose.Schema({
     type: Number,
     default: null,
   },
-});
+})
 
-export default mongoose.model("Slot", SlotSchema);
+export default mongoose.model("Slot", SlotSchema)

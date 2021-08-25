@@ -1,7 +1,7 @@
 import Booking from "../models/booking.model";
 import errorHandler from "./../helpers/dbErrorHandler";
 
-export const create = async (req, res) => {
+const create = async (req, res) => {
   let newBooking = {
     field: req.field,
     player: req.auth,
@@ -19,11 +19,29 @@ export const create = async (req, res) => {
   }
 };
 
-export const read = (req, res) => {
+const bookingByID = async (req, res, next, id) => {
+  try {
+    let booking = await Booking.findById(id)
+      .populate({ path: "field", populate: { path: "fieldOwner" } })
+      .populate("player", "_id name");
+    if (!booking) {
+      return res.status(400).json({
+        error: "Booking not found",
+      });
+    }
+    req.booking = booking;
+    next();
+  } catch (err) {
+    return res.status(400).json({
+      error: "Could not retrieve Booking Information",
+    });
+  }
+};
+const read = (req, res) => {
   return res.json(req.booking);
 };
 
-export const complete = async (req, res) => {
+const complete = async (req, res) => {
   let updatedData = {};
   updatedData["bookingStatus.$.complete"] = req.body.complete;
   updatedData.updated = Date.now();
@@ -42,7 +60,7 @@ export const complete = async (req, res) => {
     }
   }
 };
-export const remove = async (req, res) => {
+const remove = async (req, res) => {
   try {
     let booking = req.booking;
     let deletedBooking = await booking.remove();
@@ -54,7 +72,7 @@ export const remove = async (req, res) => {
   }
 };
 
-export const isPlayer = (req, res, next) => {
+const isPlayer = (req, res, next) => {
   const isPlayer = req.auth && req.auth._id == req.booking.player._id;
   if (!isPlayer) {
     return res.status("403").json({
@@ -64,7 +82,7 @@ export const isPlayer = (req, res, next) => {
   next();
 };
 
-export const listBooked = async (req, res) => {
+const listBooked = async (req, res) => {
   try {
     let bookings = await Booking.find({ player: req.auth._id })
       .sort({ completed: 1 })
@@ -78,7 +96,7 @@ export const listBooked = async (req, res) => {
   }
 };
 
-export const findBooked = async (req, res, next) => {
+const findBooked = async (req, res, next) => {
   try {
     let bookings = await Booking.find({
       field: req.field._id,
@@ -96,7 +114,7 @@ export const findBooked = async (req, res, next) => {
   }
 };
 
-export const bookingStats = async (req, res) => {
+const bookingStats = async (req, res) => {
   try {
     let stats = {};
     stats.totalBooked = await Booking.find({
@@ -111,4 +129,16 @@ export const bookingStats = async (req, res) => {
       error: errorHandler.getErrorMessage(err),
     });
   }
+};
+
+export default {
+  create,
+  bookingByID,
+  read,
+  complete,
+  remove,
+  isPlayer,
+  listBooked,
+  findBooked,
+  bookingStats,
 };
