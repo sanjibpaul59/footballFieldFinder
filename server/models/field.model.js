@@ -1,48 +1,47 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"
 
 const SlotSchema = new mongoose.Schema({
+  ofDate: {
+    type: Date,
+    // required: [true, "Start Time is required"],
+  },
+  day: {
+    type: String,
+  },
+  startTime: {
+    type: String,
+    required: [true, "Start Time is required"],
+  },
+  endTime: {
+    type: String,
+    required: [true, "End Time is required"],
+  },
+  duration: {
+    type: String,
+    default: null,
+  },
   price: {
     type: Number,
     required: [true, "Cost of Slot is required"],
   },
+  // contact: {
+  //   type: mongoose.Schema.Types.ObjectId.prototype,
+  //   ref: "User",
+  // },
   bookingStatus: {
     type: Boolean,
     default: false,
   },
-  day: {
-    type: String,
-    enum: [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-    ],
-  },
-  startTime: {
-    type: Date,
-    // required: [true, "Start Time is required"],
-  },
-  endTime: {
-    type: Date,
-    // required: [true, "End Time is required"],
-  },
-  duration: {
-    type: Number,
-    default: null,
-  },
-});
+})
 
-const Slot = mongoose.model("Slot", SlotSchema);
+const Slot = mongoose.model("Slot", SlotSchema)
 
 const FieldSchema = new mongoose.Schema({
   bin: {
     type: String,
     validate: {
       validator: function (v) {
-        return v.length === 13 ? true : false;
+        return v.length === 13 ? true : false
       },
       message: (props) =>
         `${props.value} is not a valid Business Identification Number`,
@@ -94,6 +93,6 @@ const FieldSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-});
+})
 
-export default mongoose.model("Field", FieldSchema);
+export default mongoose.model("Field", FieldSchema)

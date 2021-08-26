@@ -7,12 +7,16 @@ import DialogTitle from "@material-ui/core/DialogTitle"
 import DialogContent from "@material-ui/core/DialogContent"
 import DialogActions from "@material-ui/core/DialogActions"
 import Add from "@material-ui/icons/AddBox"
-import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers"
+import {
+  DatePicker,
+  TimePicker,
+  MuiPickersUtilsProvider,
+} from "@material-ui/pickers"
 import { makeStyles } from "@material-ui/core"
 import { newSlot } from "./api-field"
 import auth from "../auth/auth-helper"
-import MomentUtils from "@date-io/moment"
-import moment from "moment"
+import LuxonUtils from "@date-io/luxon"
+import { DateTime } from "luxon"
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -22,45 +26,43 @@ const useStyles = makeStyles((theme) => ({
 
 export default function NewSlot(props) {
   const classes = useStyles()
+  const jwt = auth.isAuthenticated()
   const [open, setOpen] = useState(false)
   const [values, setValues] = useState({
-    price: "",
+    ofDate: DateTime.now().toISODate(),
     day: "",
-    startDate: moment(),
-    endDate: moment(),
-    startTime: "",
-    endTime: "",
+    startTime: DateTime.now().toISO(),
+    endTime: DateTime.now().toISO(),
+    duration: "",
+    price: "",
+    startDate: DateTime.now().toISODate(),
+    endDate: DateTime.now().toISODate(),
   })
-  const handleChange = (name) => (event) => {
-    setValues({ ...values, [name]: event.target.value })
-  }
-  const handleDateChange = (name) => (date) => {
-    // let current = moment()
-    // let end = moment().add(6, "days")
-    // while (current.isBefore(end, "day")) {
-    //   console.log(`at ${current.format("MM-DD-YYYY")}`)
-    //   current.add(1, "days")
-    // }
-    setValues({ ...values, [name]: date })
-  }
-  const jwt = auth.isAuthenticated()
+
   const clickCheck = () => {
-    console.log()
-    let startMoment = values.startDate
-    let endMoment = values.endDate
-    while (startMoment.isBefore(endMoment, "day")) {
-      console.log(`${startMoment.format("MM-DD-YYYY")}`)
-      startMoment.add(1, "days")
+    let startMoment = DateTime.fromISO(values.startDate)
+    let endMoment = DateTime.fromISO(values.endDate)
+    let duration = endMoment.diff(startMoment).shiftTo("days").as("days")
+
+    while (endMoment >= startMoment) {
+      values.day = startMoment.toFormat("EEEE")
+      console.log(values.day)
+      values.ofDate = startMoment.toISODate()
+      startMoment = startMoment.plus({ days: 1 })
     }
+
+    let startTime = DateTime.fromISO(values.startTime)
+    let endTime = DateTime.fromISO(values.endTime)
+    let slotDuration = endTime.diff(startTime).toFormat("hh 'hr and' mm 'min'")
+    console.log(typeof slotDuration)
   }
   const clickSubmit = () => {
     const slot = {
-      price: values.price || undefined,
+      ofDate: values.startDate || undefined,
       day: values.day || undefined,
-      startDate: values.startDate || undefined,
-      endDate: values.endDate || undefined,
       startTime: values.startTime || undefined,
       endTime: values.endTime || undefined,
+      price: values.price || undefined,
     }
 
     newSlot(
@@ -89,6 +91,11 @@ export default function NewSlot(props) {
       }
     })
   }
+
+  const handleChange = (name) => (event) => {
+    setValues({ ...values, [name]: event.target.value })
+  }
+
   const handleClickOpen = () => {
     setOpen(true)
   }
@@ -96,6 +103,7 @@ export default function NewSlot(props) {
   const handleClose = () => {
     setOpen(false)
   }
+
   return (
     <div>
       <Button
@@ -123,34 +131,53 @@ export default function NewSlot(props) {
               onChange={handleChange("price")}
             />
             <br />
-            <TextField
-              margin="dense"
-              label="Day"
-              type="text"
-              fullWidth
-              value={values.day}
-              onChange={handleChange("day")}
-            />
-            <br />
-            <MuiPickersUtilsProvider utils={MomentUtils}>
+            <MuiPickersUtilsProvider utils={LuxonUtils}>
               <DatePicker
                 label="Start date"
                 disablePast
                 value={values.startDate}
-                onChange={handleDateChange("start Date")}
+                onChange={(date) =>
+                  setValues({ ...values, startDate: date.toISODate() })
+                }
                 showTodayButton
-                format="MM-DD-YYYY"
               />
             </MuiPickersUtilsProvider>
             <br />
-            <MuiPickersUtilsProvider utils={MomentUtils}>
+            <MuiPickersUtilsProvider utils={LuxonUtils}>
               <DatePicker
                 label="End date"
                 disablePast
                 showTodayButton
                 value={values.endDate}
-                onChange={handleDateChange("end Date")}
-                format="MM-DD-YYYY"
+                onChange={(date) =>
+                  setValues({ ...values, endDate: date.toISODate() })
+                }
+              />
+            </MuiPickersUtilsProvider>
+            <br />
+            <MuiPickersUtilsProvider utils={LuxonUtils}>
+              <TimePicker
+                label="Start Time"
+                value={values.startTime}
+                onChange={(date) =>
+                  setValues({
+                    ...values,
+                    startTime: date.toISO(),
+                  })
+                }
+              />
+            </MuiPickersUtilsProvider>
+            <br />
+            <MuiPickersUtilsProvider utils={LuxonUtils}>
+              <TimePicker
+                label="End Time"
+                value={values.endTime}
+                onChange={(date) =>
+                  setValues({
+                    ...values,
+                    endTime: date.toISO(),
+                  })
+                }
               />
             </MuiPickersUtilsProvider>
             <br />

@@ -23,8 +23,7 @@
     "webpack-node-externals": "1.7.2"
   },
   "dependencies": {
-    "@date-io/date-fns": "^2.11.0",
-    "@date-io/moment": "1.x",
+    "@date-io/luxon": "1.x",
     "@hot-loader/react-dom": "16.13.0",
     "@material-ui/core": "4.9.8",
     "@material-ui/icons": "4.9.1",
@@ -39,8 +38,8 @@
     "helmet": "3.22.0",
     "jsonwebtoken": "8.5.1",
     "lodash": "4.17.15",
+    "luxon": "^2.0.2",
     "material-table": "^1.69.3",
-    "moment": "^2.29.1",
     "mongoose": "5.9.7",
     "mongoose-autopopulate": "^0.14.0",
     "react": "16.13.1",
