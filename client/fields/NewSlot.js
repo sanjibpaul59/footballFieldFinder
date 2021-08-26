@@ -26,8 +26,8 @@ export default function NewSlot(props) {
   const [values, setValues] = useState({
     price: "",
     day: "",
-    startDate: moment().format("MM-DD-YYYY"),
-    endDate: moment().format("MM-DD-YYYY"),
+    startDate: moment(),
+    endDate: moment(),
     startTime: "",
     endTime: "",
   })
@@ -35,10 +35,24 @@ export default function NewSlot(props) {
     setValues({ ...values, [name]: event.target.value })
   }
   const handleDateChange = (name) => (date) => {
-    console.log(date)
+    // let current = moment()
+    // let end = moment().add(6, "days")
+    // while (current.isBefore(end, "day")) {
+    //   console.log(`at ${current.format("MM-DD-YYYY")}`)
+    //   current.add(1, "days")
+    // }
     setValues({ ...values, [name]: date })
   }
   const jwt = auth.isAuthenticated()
+  const clickCheck = () => {
+    console.log()
+    let startMoment = values.startDate
+    let endMoment = values.endDate
+    while (startMoment.isBefore(endMoment, "day")) {
+      console.log(`${startMoment.format("MM-DD-YYYY")}`)
+      startMoment.add(1, "days")
+    }
+  }
   const clickSubmit = () => {
     const slot = {
       price: values.price || undefined,
@@ -120,23 +134,23 @@ export default function NewSlot(props) {
             <br />
             <MuiPickersUtilsProvider utils={MomentUtils}>
               <DatePicker
-                label="start date"
+                label="Start date"
                 disablePast
                 value={values.startDate}
                 onChange={handleDateChange("start Date")}
                 showTodayButton
-                format="MM/DD/yyyy"
+                format="MM-DD-YYYY"
               />
             </MuiPickersUtilsProvider>
             <br />
             <MuiPickersUtilsProvider utils={MomentUtils}>
               <DatePicker
-                label="end date"
+                label="End date"
                 disablePast
+                showTodayButton
                 value={values.endDate}
                 onChange={handleDateChange("end Date")}
-                showTodayButton
-                format="MM/DD/yyyy"
+                format="MM-DD-YYYY"
               />
             </MuiPickersUtilsProvider>
             <br />
@@ -146,7 +160,7 @@ export default function NewSlot(props) {
             <Button onClick={handleClose} color="primary" variant="contained">
               Cancel
             </Button>
-            <Button onClick={clickSubmit} color="secondary" variant="contained">
+            <Button onClick={clickCheck} color="secondary" variant="contained">
               Add
             </Button>
           </DialogActions>
