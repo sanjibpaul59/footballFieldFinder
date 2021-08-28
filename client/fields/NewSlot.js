@@ -39,58 +39,93 @@ export default function NewSlot(props) {
     endDate: DateTime.now().toISODate(),
   })
 
-  const clickCheck = () => {
+  const clickSubmit = () => {
     let startMoment = DateTime.fromISO(values.startDate)
     let endMoment = DateTime.fromISO(values.endDate)
-    let duration = endMoment.diff(startMoment).shiftTo("days").as("days")
-
-    while (endMoment >= startMoment) {
-      values.day = startMoment.toFormat("EEEE")
-      console.log(values.day)
-      values.ofDate = startMoment.toISODate()
-      startMoment = startMoment.plus({ days: 1 })
-    }
+    // let duration = endMoment.diff(startMoment).shiftTo("days").as("days")
 
     let startTime = DateTime.fromISO(values.startTime)
     let endTime = DateTime.fromISO(values.endTime)
-    let slotDuration = endTime.diff(startTime).toFormat("hh 'hr and' mm 'min'")
-    console.log(typeof slotDuration)
-  }
-  const clickSubmit = () => {
-    const slot = {
-      ofDate: values.startDate || undefined,
-      day: values.day || undefined,
-      startTime: values.startTime || undefined,
-      endTime: values.endTime || undefined,
-      price: values.price || undefined,
-    }
+    let slotDuration = endTime.diff(startTime).toFormat("mm")
 
-    newSlot(
-      {
-        fieldId: props.fieldId,
-      },
-      {
-        t: jwt.token,
-      },
-      slot
-    ).then((data) => {
-      // console.log(data)
-      if (data && data.error) {
-        setValues({ ...values, error: data.error })
-      } else {
-        props.addSlot(data)
-        setValues({
-          ...values,
-          price: "",
-          day: "",
-          startTime: "",
-          // redirect:true,
-          endTime: "",
-        })
-        setOpen(false)
+    while (endMoment >= startMoment) {
+      values.ofDate = startMoment.toISODate()
+      values.day = startMoment.toFormat("EEEE")
+      let slot = {
+        ofDate: values.ofDate || undefined,
+        day: values.day || undefined,
+        startTime: values.startTime || undefined,
+        endTime: values.endTime || undefined,
+        duration: slotDuration || 0,
+        price: values.price || undefined,
       }
-    })
+      newSlot(
+        {
+          fieldId: props.fieldId,
+        },
+        {
+          t: jwt.token,
+        },
+        slot
+      ).then((data) => {
+        // console.log(data)
+        if (data && data.error) {
+          setValues({ ...values, error: data.error })
+        } else {
+          props.addSlot(data)
+          setValues({
+            ...values,
+            ofDate: "",
+            day: "",
+            startTime: "",
+            endTime: "",
+            duration: "",
+            price: "",
+          })
+          setOpen(false)
+        }
+      })
+
+      startMoment = startMoment.plus({ days: 1 })
+    }
   }
+  // const clickSubmit = () => {
+  //   const slot = {
+  //     ofDate: values.startDate || undefined,
+  //     day: values.day || undefined,
+  //     startTime: values.startTime || undefined,
+  //     endTime: values.endTime || undefined,
+  //     price: values.price || undefined,
+  //   }
+
+  //   newSlot(
+  //     {
+  //       fieldId: props.fieldId,
+  //     },
+  //     {
+  //       t: jwt.token,
+  //     },
+  //     slot
+  //   ).then((data) => {
+  //     // console.log(data)
+  //     if (data && data.error) {
+  //       setValues({ ...values, error: data.error })
+  //     } else {
+  //       props.addSlot(data)
+  //       setValues({
+  //         ...values,
+  //         ofDate: "",
+  //         day: "",
+  //         startTime: "",
+  //         endTime: "",
+  //         duration: "",
+  //         price: "",
+  //         // redirect:true,
+  //       })
+  //       setOpen(false)
+  //     }
+  //   })
+  // }
 
   const handleChange = (name) => (event) => {
     setValues({ ...values, [name]: event.target.value })
@@ -125,7 +160,7 @@ export default function NewSlot(props) {
             <TextField
               margin="dense"
               label="Price"
-              type="text"
+              type="number"
               fullWidth
               value={values.price}
               onChange={handleChange("price")}
@@ -148,6 +183,7 @@ export default function NewSlot(props) {
                 label="End date"
                 disablePast
                 showTodayButton
+                minDate={values.startDate}
                 value={values.endDate}
                 onChange={(date) =>
                   setValues({ ...values, endDate: date.toISODate() })
@@ -187,7 +223,7 @@ export default function NewSlot(props) {
             <Button onClick={handleClose} color="primary" variant="contained">
               Cancel
             </Button>
-            <Button onClick={clickCheck} color="secondary" variant="contained">
+            <Button onClick={clickSubmit} color="secondary" variant="contained">
               Add
             </Button>
           </DialogActions>

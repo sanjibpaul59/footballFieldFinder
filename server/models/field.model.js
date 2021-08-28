@@ -9,16 +9,15 @@ const SlotSchema = new mongoose.Schema({
     type: String,
   },
   startTime: {
-    type: String,
+    type: Date,
     required: [true, "Start Time is required"],
   },
   endTime: {
-    type: String,
+    type: Date,
     required: [true, "End Time is required"],
   },
   duration: {
-    type: String,
-    default: null,
+    type: Number,
   },
   price: {
     type: Number,

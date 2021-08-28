@@ -8,17 +8,12 @@ import Edit from "@material-ui/icons/Edit"
 import PeopleIcon from "@material-ui/icons/Group"
 import CompletedIcon from "@material-ui/icons/VerifiedUser"
 import Button from "@material-ui/core/Button"
-import List from "@material-ui/core/List"
-import ListItem from "@material-ui/core/ListItem"
-import ListItemAvatar from "@material-ui/core/ListItemAvatar"
-import ListItemText from "@material-ui/core/ListItemText"
-import Avatar from "@material-ui/core/Avatar"
 import Divider from "@material-ui/core/Divider"
 import Dialog from "@material-ui/core/Dialog"
 import DialogActions from "@material-ui/core/DialogActions"
 import DialogContent from "@material-ui/core/DialogContent"
 import DialogTitle from "@material-ui/core/DialogTitle"
-import MaterialTable, { MTableToolbar } from "material-table"
+import MaterialTable from "material-table"
 import Chip from "@material-ui/core/Chip"
 import { makeStyles } from "@material-ui/core"
 import { read, update } from "./api-field.js"
@@ -28,6 +23,7 @@ import DeleteField from "./DeleteField"
 import NewSlot from "./NewSlot.js"
 import { bookingStats } from "./../booking/api-booking.js"
 import Book from "./../booking/Book"
+import { DateTime } from "luxon"
 
 const useStyles = makeStyles((theme) => ({
   root: theme.mixins.gutters({
@@ -180,6 +176,54 @@ export default function Field({ match }) {
   const handleClose = () => {
     setOpen(false)
   }
+
+  const handleSlotInfo = (slots) => {
+    if (slots != undefined) {
+      let allAvailableSlots = slots.reduce(function (validSlots, slot) {
+        if (DateTime.now() < DateTime.fromISO(slot.ofDate)) {
+          let availbaleSlots = new Object()
+          availbaleSlots.ofDate = DateTime.fromISO(slot.ofDate).toISODate()
+          availbaleSlots.day = slot.day
+          availbaleSlots.startTime = DateTime.fromISO(slot.startTime).toFormat(
+            "hh':'mm a"
+          )
+          availbaleSlots.endTime = DateTime.fromISO(slot.endTime).toFormat(
+            "hh':'mm a"
+          )
+          availbaleSlots.duration = slot.duration + " mins"
+          availbaleSlots.price = slot.price
+          availbaleSlots.status =
+            slot.bookingStatus == false ? "Available for Booking" : "Booked"
+          validSlots.push(availbaleSlots)
+        }
+        return validSlots
+      }, [])
+      return allAvailableSlots
+    }
+  }
+  const handleAvailableSlots = (slots) => {
+    if (slots != undefined) {
+      let allAvailableSlots = slots.reduce(function (validSlots, slot) {
+        if (DateTime.now() < DateTime.fromISO(slot.ofDate)) {
+          let availbaleSlots = new Object()
+          availbaleSlots.ofDate = DateTime.fromISO(slot.ofDate).toISODate()
+          availbaleSlots.day = slot.day
+          availbaleSlots.startTime = DateTime.fromISO(slot.startTime).toFormat(
+            "hh':'mm a"
+          )
+          availbaleSlots.endTime = DateTime.fromISO(slot.endTime).toFormat(
+            "hh':'mm a"
+          )
+          availbaleSlots.duration = slot.duration + " mins"
+          availbaleSlots.price = slot.price
+          validSlots.push(availbaleSlots)
+        }
+        return validSlots
+      }, [])
+      return allAvailableSlots.length
+    }
+  }
+
   if (values.redirect) {
     return <Redirect to={"/owner/my-fields"} />
   }
@@ -273,22 +317,27 @@ export default function Field({ match }) {
         <Divider />
 
         <div>
+          <CardHeader />
           <MaterialTable
-            title="Slots"
+            title={
+              <Typography variant="h6" className={classes.subheading}>
+                Available Slots{" "}
+                <Chip
+                  label={handleAvailableSlots(field.slots)}
+                  className={classes.subheading}
+                />
+              </Typography>
+            }
             columns={[
+              { title: "Date", field: "ofDate" },
               { title: "Day", field: "day" },
-              { title: "Time", field: "time" },
+              { title: "Start Time", field: "startTime" },
+              { title: "End Time", field: "endTime" },
               { title: "Duration", field: "duration" },
-              { title: "Price", field: "price" },
+              { title: "Cost", field: "price" },
+              { title: "Booking Status", field: "status" },
             ]}
-            data={[
-              {
-                day: "8/26/2021",
-                time: "4.00",
-                duration: "1.30",
-                price: "2500",
-              },
-            ]}
+            data={handleSlotInfo(field.slots)}
             components={{
               Actions: () => {
                 return (
@@ -301,18 +350,18 @@ export default function Field({ match }) {
                   )
                 )
               },
-              Toolbar: (props) => (
-                <div>
-                  <MTableToolbar {...props} />
-                  <div style={{ padding: "0px 10px" }}>
-                    <Chip
-                      label="Search Bar"
-                      color="secondary"
-                      style={{ marginRight: 5, marginLeft: 10 }}
-                    />
-                  </div>
-                </div>
-              ),
+              // Toolbar: (props) => (
+              //   <div>
+              //     <MTableToolbar {...props} />
+              //     <div style={{ padding: "0px 10px" }}>
+              //       <Chip
+              //         label={field.slots && field.slots.length}
+              //         color="secondary"
+              //         style={{ marginRight: 5, marginLeft: 10 }}
+              //       />
+              //     </div>
+              //   </div>
+              // ),
             }}
             //icons with error button in button
             // icons={{
@@ -352,33 +401,7 @@ export default function Field({ match }) {
             // ]}
             options={{ actionsColumnIndex: -1, search: false }}
           />
-        </div>
-        <Divider />
-
-        <div>
-          <CardHeader
-            title={
-              <Typography variant="h6" className={classes.subheading}>
-                Slots
-              </Typography>
-            }
-            subheader={
-              <Typography variant="body1" className={classes.subheading}>
-                {" "}
-                {field.slots && field.slots.length} slots{" "}
-              </Typography>
-            }
-            action={
-              auth.isAuthenticated().user &&
-              auth.isAuthenticated().user._id == field.fieldOwner._id &&
-              !field.openForBooking && (
-                <span className={classes.action}>
-                  <NewSlot fieldId={field._id} addSlot={addSlot} />
-                </span>
-              )
-            }
-          />
-          <List>
+          {/* <List>
             {field.slots &&
               field.slots.map((slot, index) => {
                 return (
@@ -393,7 +416,7 @@ export default function Field({ match }) {
                   </span>
                 )
               })}
-          </List>
+          </List> */}
         </div>
       </Card>
       <Dialog

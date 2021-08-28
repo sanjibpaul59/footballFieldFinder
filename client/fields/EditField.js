@@ -1,25 +1,35 @@
-import React, { useState, useEffect } from "react";
-import Card from "@material-ui/core/Card";
-import CardHeader from "@material-ui/core/CardHeader";
-import CardMedia from "@material-ui/core/CardMedia";
-import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
-import DeleteIcon from "@material-ui/icons/Delete";
-import FileUpload from "@material-ui/icons/AddPhotoAlternate";
-import ArrowUp from "@material-ui/icons/ArrowUpward";
-import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core/styles";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import TextField from "@material-ui/core/TextField";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import Avatar from "@material-ui/core/Avatar";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import ListItemText from "@material-ui/core/ListItemText";
-import { read, update } from "./api-field.js";
-import { Link, Redirect } from "react-router-dom";
-import auth from "./../auth/auth-helper";
-import Divider from "@material-ui/core/Divider";
+import React, { useState, useEffect } from "react"
+import Card from "@material-ui/core/Card"
+import CardHeader from "@material-ui/core/CardHeader"
+import CardMedia from "@material-ui/core/CardMedia"
+import Typography from "@material-ui/core/Typography"
+import IconButton from "@material-ui/core/IconButton"
+import DeleteIcon from "@material-ui/icons/Delete"
+import FileUpload from "@material-ui/icons/AddPhotoAlternate"
+import ArrowUp from "@material-ui/icons/ArrowUpward"
+import Button from "@material-ui/core/Button"
+import { makeStyles } from "@material-ui/core/styles"
+import List from "@material-ui/core/List"
+import ListItem from "@material-ui/core/ListItem"
+import TextField from "@material-ui/core/TextField"
+import ListItemAvatar from "@material-ui/core/ListItemAvatar"
+import Avatar from "@material-ui/core/Avatar"
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction"
+import ListItemText from "@material-ui/core/ListItemText"
+import { read, update } from "./api-field.js"
+import { Link, Redirect } from "react-router-dom"
+import auth from "./../auth/auth-helper"
+import Divider from "@material-ui/core/Divider"
+import DeleteField from "./DeleteField"
+import MaterialTable from "material-table"
+import Chip from "@material-ui/core/Chip"
+import LuxonUtils from "@date-io/luxon"
+import { DateTime } from "luxon"
+import {
+  DatePicker,
+  TimePicker,
+  MuiPickersUtilsProvider,
+} from "@material-ui/pickers"
 
 const useStyles = makeStyles((theme) => ({
   root: theme.mixins.gutters({
@@ -78,10 +88,10 @@ const useStyles = makeStyles((theme) => ({
   list: {
     backgroundColor: "#f3f3f3",
   },
-}));
+}))
 
 export default function EditField({ match }) {
-  const classes = useStyles();
+  const classes = useStyles()
   const [field, setField] = useState({
     fieldName: "",
     location: "",
@@ -91,58 +101,91 @@ export default function EditField({ match }) {
     fieldSize: "",
     fieldOwner: {},
     slots: [],
-  });
+  })
   const [values, setValues] = useState({
     redirect: false,
     error: "",
-  });
+  })
   useEffect(() => {
-    const abortController = new AbortController();
-    const signal = abortController.signal;
+    const abortController = new AbortController()
+    const signal = abortController.signal
 
     read({ fieldId: match.params.fieldId }, signal).then((data) => {
       if (data.error) {
-        setValues({ ...values, error: data.error });
+        setValues({ ...values, error: data.error })
       } else {
-        data.image = "";
-        setField(data);
+        data.image = ""
+        setField(data)
       }
-    });
+    })
     return function cleanup() {
-      abortController.abort();
-    };
-  }, [match.params.fieldId]);
-  const jwt = auth.isAuthenticated();
+      abortController.abort()
+    }
+  }, [match.params.fieldId])
+  const jwt = auth.isAuthenticated()
   const handleChange = (name) => (event) => {
-    const value = name === "image" ? event.target.files[0] : event.target.value;
-    setField({ ...field, [name]: value });
-  };
+    const value = name === "image" ? event.target.files[0] : event.target.value
+    setField({ ...field, [name]: value })
+  }
   const handleSlotChange = (name, index) => (event) => {
-    const slots = field.slots;
-    slots[index][name] = event.target.value;
-    setField({ ...field, slots: slots });
-  };
+    const slots = field.slots
+    slots[index][name] = event.target.value
+    setField({ ...field, slots: slots })
+  }
   const deleteSlot = (index) => (event) => {
-    const slots = field.slots;
-    slots.splice(index, 1);
-    setField({ ...field, slots: slots });
-  };
+    const slots = field.slots
+    slots.splice(index, 1)
+    setField({ ...field, slots: slots })
+  }
+  const removeField = (field) => {
+    setValues({ ...values, redirect: true })
+  }
   const moveUp = (index) => (event) => {
-    const slots = field.slots;
-    const moveUp = slots[index];
-    slots[index] = slots[index - 1];
-    slots[index - 1] = moveUp;
-    setField({ ...field, slots: slots });
-  };
+    const slots = field.slots
+    const moveUp = slots[index]
+    slots[index] = slots[index - 1]
+    slots[index - 1] = moveUp
+    setField({ ...field, slots: slots })
+  }
+  const handleSlotInfo = (slots) => {
+    if (slots != undefined) {
+      let allSlots
+      allSlots = slots.map((slot) => {
+        let rowData = new Object()
+        rowData.ofDate = DateTime.fromISO(slot.ofDate).toISODate()
+        rowData.day = slot.day
+        rowData.startTime = DateTime.fromISO(slot.startTime).toFormat(
+          "hh':'mm a"
+        )
+        rowData.endTime = DateTime.fromISO(slot.endTime).toFormat("hh':'mm a")
+        rowData.duration = slot.duration + " mins"
+        rowData.price = slot.price
+        return rowData
+      })
+      return allSlots
+    }
+  }
+  const handleRowUpdate = (newData, oldData) => {
+    const dataUpdate = [...field.slots]
+    const index = oldData.tableData.id
+    dataUpdate[index] = newData
+    setField({ ...field, slots: dataUpdate })
+  }
+  const handleRowDelete = (oldData) => {
+    const index = oldData.tableData.id
+    const dataDelete = [...field.slots]
+    dataDelete.splice(index, 1)
+    setField({ ...field, slots: dataDelete })
+  }
   const clickSubmit = () => {
-    let fieldData = new FormData();
-    field.fieldName && fieldData.append("fieldName", field.fieldName);
-    field.fieldSize && fieldData.append("fieldSize", field.fieldSize);
-    field.fieldType && fieldData.append("fieldType", field.fieldType);
-    field.location && fieldData.append("location", field.location);
-    field.description && fieldData.append("description", field.description);
-    field.image && fieldData.append("image", field.image);
-    fieldData.append("slots", JSON.stringify(field.slots));
+    let fieldData = new FormData()
+    field.fieldName && fieldData.append("fieldName", field.fieldName)
+    field.fieldSize && fieldData.append("fieldSize", field.fieldSize)
+    field.fieldType && fieldData.append("fieldType", field.fieldType)
+    field.location && fieldData.append("location", field.location)
+    field.description && fieldData.append("description", field.description)
+    field.image && fieldData.append("image", field.image)
+    fieldData.append("slots", JSON.stringify(field.slots))
     update(
       {
         fieldId: match.params.fieldId,
@@ -153,19 +196,23 @@ export default function EditField({ match }) {
       fieldData
     ).then((data) => {
       if (data && data.error) {
-        console.log(data.error);
-        setValues({ ...values, error: data.error });
+        console.log(data.error)
+        setValues({ ...values, error: data.error })
       } else {
-        setValues({ ...values, redirect: true });
+        setValues({ ...values, redirect: true })
       }
-    });
-  };
+    })
+  }
+  const handleEditableRow = (rowData) => {
+    console.log(DateTime.fromISO(rowData.ofDate) > DateTime.now())
+  }
+
   if (values.redirect) {
-    return <Redirect to={"/owner/field/" + field._id} />;
+    return <Redirect to={"/owner/field/" + field._id} />
   }
   const imageUrl = field._id
     ? `/api/fields/image/${field._id}?${new Date().getTime()}`
-    : "/api/fields/defaultphoto";
+    : "/api/fields/defaultphoto"
   return (
     <div className={classes.root}>
       <Card className={classes.card}>
@@ -211,6 +258,7 @@ export default function EditField({ match }) {
                 >
                   Save
                 </Button>
+                <DeleteField field={field} onRemove={removeField} />
               </span>
             )
           }
@@ -255,17 +303,44 @@ export default function EditField({ match }) {
         </div>
         <Divider />
         <div>
-          <CardHeader
+          <CardHeader />
+          <MaterialTable
             title={
               <Typography variant="h6" className={classes.subheading}>
                 Slots - Edit and Rearrange
+                <Chip
+                  label={field.slots && field.slots.length}
+                  className={classes.subheading}
+                />
               </Typography>
             }
-            subheader={
-              <Typography variant="body1" className={classes.subheading}>
-                {field.slots && field.slots.length} slots
-              </Typography>
-            }
+            columns={[
+              { title: "Date", field: "ofDate" },
+              { title: "Start Time", field: "startTime" },
+              { title: "End Time", field: "endTime" },
+              { title: "Duration", field: "duration" },
+              { title: "Cost", field: "price" },
+            ]}
+            data={handleSlotInfo(field.slots)}
+            editable={{
+              isEditable: (rowData) =>
+                DateTime.fromISO(rowData.ofDate) > DateTime.now(),
+              onRowUpdate: (newData, oldData) =>
+                new Promise((resolve, reject) => {
+                  setTimeout(() => {
+                    handleRowUpdate(newData, oldData)
+                    resolve()
+                  }, 1000)
+                }),
+              onRowDelete: (oldData) =>
+                new Promise((resolve, reject) => {
+                  setTimeout(() => {
+                    handleRowDelete(oldData)
+                    resolve()
+                  }, 1000)
+                }),
+            }}
+            options={{ actionsColumnIndex: -1, search: false }}
           />
           <List>
             {field.slots &&
@@ -312,29 +387,29 @@ export default function EditField({ match }) {
                           </>
                         }
                       />
-                      {!field.openForBooking && (
-                        <ListItemSecondaryAction>
-                          <IconButton
-                            edge="end"
-                            aria-label="up"
-                            color="primary"
-                            onClick={deleteSlot(index)}
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </ListItemSecondaryAction>
-                      )}
+                      {/* {!field.openForBooking && ( */}
+                      <ListItemSecondaryAction>
+                        <IconButton
+                          edge="end"
+                          aria-label="up"
+                          color="primary"
+                          onClick={deleteSlot(index)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </ListItemSecondaryAction>
+                      {/* )} */}
                     </ListItem>
                     <Divider
                       style={{ backgroundColor: "rgb(106, 106, 106)" }}
                       component="li"
                     />
                   </span>
-                );
+                )
               })}
           </List>
         </div>
       </Card>
     </div>
-  );
+  )
 }
