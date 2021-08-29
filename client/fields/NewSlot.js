@@ -89,43 +89,6 @@ export default function NewSlot(props) {
       startMoment = startMoment.plus({ days: 1 })
     }
   }
-  // const clickSubmit = () => {
-  //   const slot = {
-  //     ofDate: values.startDate || undefined,
-  //     day: values.day || undefined,
-  //     startTime: values.startTime || undefined,
-  //     endTime: values.endTime || undefined,
-  //     price: values.price || undefined,
-  //   }
-
-  //   newSlot(
-  //     {
-  //       fieldId: props.fieldId,
-  //     },
-  //     {
-  //       t: jwt.token,
-  //     },
-  //     slot
-  //   ).then((data) => {
-  //     // console.log(data)
-  //     if (data && data.error) {
-  //       setValues({ ...values, error: data.error })
-  //     } else {
-  //       props.addSlot(data)
-  //       setValues({
-  //         ...values,
-  //         ofDate: "",
-  //         day: "",
-  //         startTime: "",
-  //         endTime: "",
-  //         duration: "",
-  //         price: "",
-  //         // redirect:true,
-  //       })
-  //       setOpen(false)
-  //     }
-  //   })
-  // }
 
   const handleChange = (name) => (event) => {
     setValues({ ...values, [name]: event.target.value })

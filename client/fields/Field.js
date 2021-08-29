@@ -15,6 +15,9 @@ import DialogContent from "@material-ui/core/DialogContent"
 import DialogTitle from "@material-ui/core/DialogTitle"
 import MaterialTable from "material-table"
 import Chip from "@material-ui/core/Chip"
+import List from "@material-ui/core/List"
+import ListItem from "@material-ui/core/ListItem"
+import ListItemText from "@material-ui/core/ListItemText"
 import { makeStyles } from "@material-ui/core"
 import { read, update } from "./api-field.js"
 import { Link, Redirect } from "react-router-dom"
@@ -29,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   root: theme.mixins.gutters({
     maxWidth: 800,
     margin: "auto",
-    padding: theme.spacing(3),
+    padding: theme.spacing(2),
     marginTop: theme.spacing(12),
   }),
   flex: {
@@ -37,7 +40,18 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 20,
   },
   card: {
-    padding: "24px 40px 40px",
+    padding: "20px 0px 40px",
+  },
+  content: {
+    maxWidth: 800,
+    margin: "auto",
+  },
+  table: {
+    width: 770,
+    padding: theme.spacing(2),
+  },
+  list: {
+    display: "flex",
   },
   subheading: {
     margin: "10px",
@@ -54,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
   media: {
     height: 190,
     display: "inline-block",
-    width: "100%",
+    width: "50%",
     marginLeft: "16px",
   },
   icon: {
@@ -147,6 +161,7 @@ export default function Field({ match }) {
   }
 
   const clickOpenForBooking = () => {
+    console.log(field.facilities)
     if (field.slots.length > 0) {
       setOpen(true)
     }
@@ -193,7 +208,7 @@ export default function Field({ match }) {
           availbaleSlots.duration = slot.duration + " mins"
           availbaleSlots.price = slot.price
           availbaleSlots.status =
-            slot.bookingStatus == false ? "Available for Booking" : "Booked"
+            slot.bookingStatus == false ? "Available" : "Booked"
           validSlots.push(availbaleSlots)
         }
         return validSlots
@@ -307,18 +322,37 @@ export default function Field({ match }) {
             <Typography className={classes.subheading} variant="body1">
               {field.description}
             </Typography>
-            {field.openForBooking && (
+
+            {/* {field.openForBooking && (
               <div className={classes.enroll}>
                 <Book fieldId={field._id} />
               </div>
-            )}
+            )} */}
           </div>
         </div>
         <Divider />
 
-        <div>
-          <CardHeader />
+        <div className={classes.details}>
+          <Typography className={classes.subheading} variant="body1">
+            Facilities:
+          </Typography>
+          <List dense className={classes.list}>
+            {field.facilities &&
+              field.facilities.map((facility) => {
+                return (
+                  <ListItem key={facility}>
+                    <ListItemText primary={facility} />
+                  </ListItem>
+                )
+              })}
+          </List>
+        </div>
+
+        <Divider />
+
+        <div className={classes.table}>
           <MaterialTable
+            style={{ fontSize: 15 }}
             title={
               <Typography variant="h6" className={classes.subheading}>
                 Available Slots{" "}
@@ -350,73 +384,9 @@ export default function Field({ match }) {
                   )
                 )
               },
-              // Toolbar: (props) => (
-              //   <div>
-              //     <MTableToolbar {...props} />
-              //     <div style={{ padding: "0px 10px" }}>
-              //       <Chip
-              //         label={field.slots && field.slots.length}
-              //         color="secondary"
-              //         style={{ marginRight: 5, marginLeft: 10 }}
-              //       />
-              //     </div>
-              //   </div>
-              // ),
             }}
-            //icons with error button in button
-            // icons={{
-            //   Add: () =>
-            //     auth.isAuthenticated().user &&
-            //     auth.isAuthenticated().user._id == field.fieldOwner._id &&
-            //     !field.openForBooking && (
-            //       <span className={classes.action}>
-            //         <NewSlot fieldId={field._id} addSlot={addSlot} />
-            //       </span>
-            //     ),
-            // }}
-            //toolbar actions
-            // actions={[
-            //   auth.isAuthenticated().user &&
-            //     auth.isAuthenticated().user._id == field.fieldOwner._id &&
-            //     !field.openForBooking && {
-            //       icon: () => <NewSlot fieldId={field._id} addSlot={addSlot} />,
-            //       isFreeAction: true,
-            //     },
-            // ]}
-
-            //row actions
-            // actions={[
-            //   {
-            //     icon: "save",
-            //     tooltip: "Book",
-            //     onClick: (event, rowData) => alert("You booked" + rowData.time),
-            //   },
-            //   (rowData) => ({
-            //     icon: "delete",
-            //     tooltip: "Cancel Booking",
-            //     onClick: (event, rowData) =>
-            //       confirm("You want to delete " + rowData.price),
-            //     disabled: rowData.day == null,
-            //   }),
-            // ]}
             options={{ actionsColumnIndex: -1, search: false }}
           />
-          {/* <List>
-            {field.slots &&
-              field.slots.map((slot, index) => {
-                return (
-                  <span key={index}>
-                    <ListItem>
-                      <ListItemAvatar>
-                        <Avatar>{index + 1}</Avatar>
-                      </ListItemAvatar>
-                      <ListItemText primary={slot.price} />
-                    </ListItem>
-                    <Divider variant="inset" component="li" />
-                  </span>
-                )
-              })}
-          </List> */}
         </div>
       </Card>
       <Dialog

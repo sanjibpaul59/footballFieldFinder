@@ -3,7 +3,7 @@ import mongoose from "mongoose"
 const SlotSchema = new mongoose.Schema({
   ofDate: {
     type: Date,
-    // required: [true, "Start Time is required"],
+    required: [true, "Slot Date is required"],
   },
   day: {
     type: String,
@@ -23,10 +23,6 @@ const SlotSchema = new mongoose.Schema({
     type: Number,
     required: [true, "Cost of Slot is required"],
   },
-  // contact: {
-  //   type: mongoose.Schema.Types.ObjectId.prototype,
-  //   ref: "User",
-  // },
   bookingStatus: {
     type: Boolean,
     default: false,
@@ -34,14 +30,6 @@ const SlotSchema = new mongoose.Schema({
 })
 
 const Slot = mongoose.model("Slot", SlotSchema)
-
-// const FacilitySchema = new mongoose.Schema({
-//   facilityName: {
-//     type: String,
-//   },
-// })
-
-// const Facility = mongoose.model("Facility", FacilitySchema)
 
 const FieldSchema = new mongoose.Schema({
   bin: {
@@ -94,7 +82,12 @@ const FieldSchema = new mongoose.Schema({
     ref: "User",
   },
   slots: [SlotSchema],
-  facilities: [{ type: String }],
+  facilities: [
+    {
+      type: String,
+      required: [true, "Please Add available facilities to proceed."],
+    },
+  ],
   created: Date,
   updated: {
     type: Date,

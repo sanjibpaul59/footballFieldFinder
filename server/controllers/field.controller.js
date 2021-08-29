@@ -84,6 +84,9 @@ const update = async (req, res) => {
     if (fields.slots) {
       field.slots = JSON.parse(fields.slots)
     }
+    if (fields.facilities) {
+      field.facilities = JSON.parse(fields.facilities)
+    }
     field.updated = Date.now()
     if (files.image) {
       field.image.data = fs.readFileSync(files.image.path)

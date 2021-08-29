@@ -205,9 +205,9 @@ export default function EditField({ match }) {
       }
     })
   }
-  const handleEditableRow = (rowData) => {
-    console.log(DateTime.fromISO(rowData.ofDate) > DateTime.now())
-  }
+  // const handleEditableRow = (rowData) => {
+  //   console.log(DateTime.fromISO(rowData.ofDate) > DateTime.now())
+  // }
 
   if (values.redirect) {
     return <Redirect to={"/owner/field/" + field._id} />

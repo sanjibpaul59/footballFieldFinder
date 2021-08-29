@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from "react";
-import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
-import Icon from "@material-ui/core/Icon";
-import Avatar from "@material-ui/core/Avatar";
-import FileUpload from "@material-ui/icons/AddPhotoAlternate";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
-import { makeStyles } from "@material-ui/core/styles";
-import auth from "./../auth/auth-helper";
-import { read, update } from "./api-user.js";
-import { Redirect } from "react-router-dom";
+import React, { useState, useEffect } from "react"
+import Card from "@material-ui/core/Card"
+import CardActions from "@material-ui/core/CardActions"
+import CardContent from "@material-ui/core/CardContent"
+import Button from "@material-ui/core/Button"
+import TextField from "@material-ui/core/TextField"
+import Typography from "@material-ui/core/Typography"
+import Icon from "@material-ui/core/Icon"
+import Avatar from "@material-ui/core/Avatar"
+import FileUpload from "@material-ui/icons/AddPhotoAlternate"
+import FormControlLabel from "@material-ui/core/FormControlLabel"
+import Switch from "@material-ui/core/Switch"
+import { makeStyles } from "@material-ui/core/styles"
+import auth from "./../auth/auth-helper"
+import { read, update } from "./api-user.js"
+import { Redirect } from "react-router-dom"
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -50,10 +50,10 @@ const useStyles = makeStyles((theme) => ({
   filename: {
     marginLeft: "10px",
   },
-}));
+}))
 
 export default function EditProfile({ match }) {
-  const classes = useStyles();
+  const classes = useStyles()
   const [values, setValues] = useState({
     name: "",
     password: "",
@@ -64,12 +64,12 @@ export default function EditProfile({ match }) {
     id: "",
     error: "",
     redirectToProfile: false,
-  });
-  const jwt = auth.isAuthenticated();
+  })
+  const jwt = auth.isAuthenticated()
 
   useEffect(() => {
-    const abortController = new AbortController();
-    const signal = abortController.signal;
+    const abortController = new AbortController()
+    const signal = abortController.signal
 
     read(
       {
@@ -79,7 +79,7 @@ export default function EditProfile({ match }) {
       signal
     ).then((data) => {
       if (data && data.error) {
-        setValues({ ...values, error: data.error });
+        setValues({ ...values, error: data.error })
       } else {
         setValues({
           ...values,
@@ -88,23 +88,22 @@ export default function EditProfile({ match }) {
           email: data.email,
           phone: data.phone,
           owner: data.owner,
-        });
+        })
       }
-    });
+    })
     return function cleanup() {
-      abortController.abort();
-    };
-  }, [match.params.userId]);
+      abortController.abort()
+    }
+  }, [match.params.userId])
 
   const clickSubmit = () => {
-    console.log(jwt.token);
-    const userData = new FormData();
-    values.name && userData.append("name", values.name);
-    values.email && userData.append("email", values.email);
-    values.password && userData.append("password", values.password);
-    values.phone && userData.append("phone", values.phone);
-    values.photo && userData.append("photo", values.photo);
-    userData.append("owner", values.owner);
+    const userData = new FormData()
+    values.name && userData.append("name", values.name)
+    values.email && userData.append("email", values.email)
+    values.password && userData.append("password", values.password)
+    values.phone && userData.append("phone", values.phone)
+    values.photo && userData.append("photo", values.photo)
+    userData.append("owner", values.owner)
 
     update(
       {
@@ -116,30 +115,30 @@ export default function EditProfile({ match }) {
       userData
     ).then((data) => {
       if (data && data.error) {
-        setValues({ ...values, error: data.error });
+        setValues({ ...values, error: data.error })
       } else {
         auth.updateUser(data, () => {
-          setValues({ ...values, userId: data._id, redirectToProfile: true });
-        });
+          setValues({ ...values, userId: data._id, redirectToProfile: true })
+        })
       }
-    });
-  };
+    })
+  }
   const handleChange = (name) => (event) => {
-    const value = name === "photo" ? event.target.files[0] : event.target.value;
+    const value = name === "photo" ? event.target.files[0] : event.target.value
     //user.set(name, value)
-    setValues({ ...values, [name]: value });
-  };
+    setValues({ ...values, [name]: value })
+  }
 
   const photoUrl = values.id
     ? `/api/users/photo/${values.id}?${new Date().getTime()}`
-    : `/api/users/defaultphoto`;
+    : `/api/users/defaultphoto`
 
   const handleCheck = (event, checked) => {
-    setValues({ ...values, owner: checked });
-  };
+    setValues({ ...values, owner: checked })
+  }
 
   if (values.redirectToProfile) {
-    return <Redirect to={"/user/" + values.id} />;
+    return <Redirect to={"/user/" + values.id} />
   }
 
   return (
@@ -246,5 +245,5 @@ export default function EditProfile({ match }) {
         </Button>
       </CardActions>
     </Card>
-  );
+  )
 }
