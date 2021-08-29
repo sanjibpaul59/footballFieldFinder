@@ -101,6 +101,7 @@ export default function EditField({ match }) {
     fieldSize: "",
     fieldOwner: {},
     slots: [],
+    facilities: [],
   })
   const [values, setValues] = useState({
     redirect: false,
@@ -186,6 +187,7 @@ export default function EditField({ match }) {
     field.description && fieldData.append("description", field.description)
     field.image && fieldData.append("image", field.image)
     fieldData.append("slots", JSON.stringify(field.slots))
+    fieldData.append("facilities", JSON.stringify(field.facilities))
     update(
       {
         fieldId: match.params.fieldId,

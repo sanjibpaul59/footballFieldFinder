@@ -35,6 +35,14 @@ const SlotSchema = new mongoose.Schema({
 
 const Slot = mongoose.model("Slot", SlotSchema)
 
+// const FacilitySchema = new mongoose.Schema({
+//   facilityName: {
+//     type: String,
+//   },
+// })
+
+// const Facility = mongoose.model("Facility", FacilitySchema)
+
 const FieldSchema = new mongoose.Schema({
   bin: {
     type: String,
@@ -86,7 +94,7 @@ const FieldSchema = new mongoose.Schema({
     ref: "User",
   },
   slots: [SlotSchema],
-  facilities: [String],
+  facilities: [{ type: String }],
   created: Date,
   updated: {
     type: Date,
