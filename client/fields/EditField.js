@@ -152,6 +152,7 @@ export default function EditField({ match }) {
     if (slots != undefined) {
       let allSlots
       allSlots = slots.map((slot) => {
+        console.log(slot)
         let rowData = new Object()
         rowData.ofDate = DateTime.fromISO(slot.ofDate).toISODate()
         rowData.day = slot.day
@@ -205,9 +206,6 @@ export default function EditField({ match }) {
       }
     })
   }
-  // const handleEditableRow = (rowData) => {
-  //   console.log(DateTime.fromISO(rowData.ofDate) > DateTime.now())
-  // }
 
   if (values.redirect) {
     return <Redirect to={"/owner/field/" + field._id} />
@@ -326,7 +324,7 @@ export default function EditField({ match }) {
             data={handleSlotInfo(field.slots)}
             editable={{
               isEditable: (rowData) =>
-                DateTime.fromISO(rowData.ofDate) > DateTime.now(),
+                DateTime.fromISO(rowData.ofDate) >= DateTime.now(),
               onRowUpdate: (newData, oldData) =>
                 new Promise((resolve, reject) => {
                   setTimeout(() => {
