@@ -3,19 +3,10 @@ import Card from "@material-ui/core/Card"
 import CardHeader from "@material-ui/core/CardHeader"
 import CardMedia from "@material-ui/core/CardMedia"
 import Typography from "@material-ui/core/Typography"
-import IconButton from "@material-ui/core/IconButton"
-import DeleteIcon from "@material-ui/icons/Delete"
 import FileUpload from "@material-ui/icons/AddPhotoAlternate"
-import ArrowUp from "@material-ui/icons/ArrowUpward"
 import Button from "@material-ui/core/Button"
 import { makeStyles } from "@material-ui/core/styles"
-import List from "@material-ui/core/List"
-import ListItem from "@material-ui/core/ListItem"
 import TextField from "@material-ui/core/TextField"
-import ListItemAvatar from "@material-ui/core/ListItemAvatar"
-import Avatar from "@material-ui/core/Avatar"
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction"
-import ListItemText from "@material-ui/core/ListItemText"
 import { read, update } from "./api-field.js"
 import { Link, Redirect } from "react-router-dom"
 import auth from "./../auth/auth-helper"
@@ -23,14 +14,8 @@ import Divider from "@material-ui/core/Divider"
 import DeleteField from "./DeleteField"
 import MaterialTable from "material-table"
 import Chip from "@material-ui/core/Chip"
-import LuxonUtils from "@date-io/luxon"
+import Checkbox from "@material-ui/core/Checkbox"
 import { DateTime } from "luxon"
-import {
-  DatePicker,
-  TimePicker,
-  MuiPickersUtilsProvider,
-} from "@material-ui/pickers"
-import NewSlot from "./NewSlot.js"
 
 const useStyles = makeStyles((theme) => ({
   root: theme.mixins.gutters({
@@ -173,6 +158,7 @@ export default function EditField({ match }) {
     const dataUpdate = [...field.slots]
     const index = oldData.tableData.id
     dataUpdate[index] = newData
+
     setField({ ...field, slots: dataUpdate })
   }
   const handleRowDelete = (oldData) => {
@@ -340,6 +326,7 @@ export default function EditField({ match }) {
               {
                 title: "End Time",
                 field: "endTime",
+                type: "datetime",
                 render: (rowData) =>
                   DateTime.fromISO(rowData.endTime).toLocaleString(
                     DateTime.TIME_SIMPLE
@@ -348,26 +335,21 @@ export default function EditField({ match }) {
               {
                 title: "Duration",
                 field: "duration",
+                type: "numeric",
                 render: (rowData) => rowData.duration + " mins",
               },
               {
                 title: "Cost",
                 field: "price",
+                type: "numeric",
                 render: (rowData) => "BDT " + rowData.price,
               },
               {
                 title: "Status",
                 field: "bookingStatus",
+                type: "boolean",
                 render: (rowData) =>
-                  rowData.bookingStatus == false ? (
-                    <Button size="small" onClick={handleBooking}>
-                      Book
-                    </Button>
-                  ) : (
-                    <Button size="small" disabled>
-                      Booked
-                    </Button>
-                  ),
+                  rowData.bookingStatus == false ? "Available" : "Booked",
               },
             ]}
             data={handleSlotInfo(field.slots)}

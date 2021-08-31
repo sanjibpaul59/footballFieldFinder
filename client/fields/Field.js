@@ -382,11 +382,15 @@ export default function Field({ match }) {
                 field: "bookingStatus",
                 render: (rowData) =>
                   rowData.bookingStatus == false ? (
-                    <Button size="small" onClick={handleBooking}>
+                    <Button
+                      color="primary"
+                      size="small"
+                      onClick={handleBooking}
+                    >
                       Book
                     </Button>
                   ) : (
-                    <Button size="small" disabled>
+                    <Button color="secondary" size="small" disabled>
                       Booked
                     </Button>
                   ),
@@ -398,11 +402,12 @@ export default function Field({ match }) {
                 return (
                   auth.isAuthenticated().user &&
                   auth.isAuthenticated().user._id == field.fieldOwner._id &&
-                  !field.openForBooking && (
-                    <span className={classes.action}>
-                      <NewSlot fieldId={field._id} addSlot={addSlot} />
-                    </span>
-                  )
+                  (!field.openForBooking ||
+                    (field.openForBooking && (
+                      <span className={classes.action}>
+                        <NewSlot fieldId={field._id} addSlot={addSlot} />
+                      </span>
+                    )))
                 )
               },
             }}
