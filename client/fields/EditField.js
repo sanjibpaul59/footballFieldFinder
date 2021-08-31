@@ -14,8 +14,8 @@ import Divider from "@material-ui/core/Divider"
 import DeleteField from "./DeleteField"
 import MaterialTable from "material-table"
 import Chip from "@material-ui/core/Chip"
-import Checkbox from "@material-ui/core/Checkbox"
 import { DateTime } from "luxon"
+import NewSlot from "./NewSlot.js"
 
 const useStyles = makeStyles((theme) => ({
   root: theme.mixins.gutters({
@@ -27,6 +27,10 @@ const useStyles = makeStyles((theme) => ({
   flex: {
     display: "flex",
     marginBottom: 20,
+  },
+  tableTop: {
+    display: "flex",
+    justifyContent: "space-between",
   },
   card: {
     padding: "20px 0px 40px",
@@ -370,6 +374,34 @@ export default function EditField({ match }) {
                     resolve()
                   }, 1000)
                 }),
+            }}
+            components={{
+              Toolbar: () => {
+                return (
+                  <div className={classes.tableTop}>
+                    <div>
+                      <Typography variant="h6" className={classes.subheading}>
+                        Slots - Edit and Rearrange
+                        <Chip
+                          label={field.slots && field.slots.length}
+                          className={classes.subheading}
+                        />
+                      </Typography>
+                    </div>
+                    <div className={classes.action}>
+                      {auth.isAuthenticated().user &&
+                        auth.isAuthenticated().user._id ==
+                          field.fieldOwner._id &&
+                        (!field.openForBooking ||
+                          (field.openForBooking && (
+                            <span className={classes.action}>
+                              <NewSlot fieldId={field._id} addSlot={addSlot} />
+                            </span>
+                          )))}
+                    </div>
+                  </div>
+                )
+              },
             }}
             options={{ actionsColumnIndex: -1, search: false }}
           />
