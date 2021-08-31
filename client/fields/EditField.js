@@ -30,12 +30,13 @@ import {
   TimePicker,
   MuiPickersUtilsProvider,
 } from "@material-ui/pickers"
+import NewSlot from "./NewSlot.js"
 
 const useStyles = makeStyles((theme) => ({
   root: theme.mixins.gutters({
-    maxWidth: 800,
+    maxWidth: 1000,
     margin: "auto",
-    padding: theme.spacing(3),
+    padding: theme.spacing(2),
     marginTop: theme.spacing(12),
   }),
   flex: {
@@ -43,7 +44,15 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 20,
   },
   card: {
-    padding: "24px 40px 40px",
+    padding: "20px 0px 40px",
+  },
+  table: {
+    width: 970,
+    padding: theme.spacing(2),
+  },
+  content: {
+    maxWidth: 800,
+    margin: "auto",
   },
   subheading: {
     margin: "10px",
@@ -138,6 +147,9 @@ export default function EditField({ match }) {
     slots.splice(index, 1)
     setField({ ...field, slots: slots })
   }
+  const addSlot = (field) => {
+    setField(field)
+  }
   const removeField = (field) => {
     setValues({ ...values, redirect: true })
   }
@@ -152,17 +164,7 @@ export default function EditField({ match }) {
     if (slots != undefined) {
       let allSlots
       allSlots = slots.map((slot) => {
-        console.log(slot)
-        let rowData = new Object()
-        rowData.ofDate = DateTime.fromISO(slot.ofDate).toISODate()
-        rowData.day = slot.day
-        rowData.startTime = DateTime.fromISO(slot.startTime).toFormat(
-          "hh':'mm a"
-        )
-        rowData.endTime = DateTime.fromISO(slot.endTime).toFormat("hh':'mm a")
-        rowData.duration = slot.duration + " mins"
-        rowData.price = slot.price
-        return rowData
+        return slot
       })
       return allSlots
     }
@@ -205,6 +207,9 @@ export default function EditField({ match }) {
         setValues({ ...values, redirect: true })
       }
     })
+  }
+  const handleBooking = () => {
+    console.log("It's a button!")
   }
 
   if (values.redirect) {
@@ -302,9 +307,9 @@ export default function EditField({ match }) {
           </div>
         </div>
         <Divider />
-        <div>
-          <CardHeader />
+        <div className={classes.table}>
           <MaterialTable
+            style={{ fontSize: 15 }}
             title={
               <Typography variant="h6" className={classes.subheading}>
                 Slots - Edit and Rearrange
@@ -315,16 +320,60 @@ export default function EditField({ match }) {
               </Typography>
             }
             columns={[
-              { title: "Date", field: "ofDate" },
-              { title: "Start Time", field: "startTime" },
-              { title: "End Time", field: "endTime" },
-              { title: "Duration", field: "duration" },
-              { title: "Cost", field: "price" },
+              {
+                title: "Date",
+                field: "ofDate",
+                render: (rowData) =>
+                  DateTime.fromISO(rowData.ofDate).toLocaleString(
+                    DateTime.DATE_SHORT
+                  ),
+              },
+              { title: "Day", field: "day" },
+              {
+                title: "Start Time",
+                field: "startTime",
+                render: (rowData) =>
+                  DateTime.fromISO(rowData.startTime).toLocaleString(
+                    DateTime.TIME_SIMPLE
+                  ),
+              },
+              {
+                title: "End Time",
+                field: "endTime",
+                render: (rowData) =>
+                  DateTime.fromISO(rowData.endTime).toLocaleString(
+                    DateTime.TIME_SIMPLE
+                  ),
+              },
+              {
+                title: "Duration",
+                field: "duration",
+                render: (rowData) => rowData.duration + " mins",
+              },
+              {
+                title: "Cost",
+                field: "price",
+                render: (rowData) => "BDT " + rowData.price,
+              },
+              {
+                title: "Status",
+                field: "bookingStatus",
+                render: (rowData) =>
+                  rowData.bookingStatus == false ? (
+                    <Button size="small" onClick={handleBooking}>
+                      Book
+                    </Button>
+                  ) : (
+                    <Button size="small" disabled>
+                      Booked
+                    </Button>
+                  ),
+              },
             ]}
             data={handleSlotInfo(field.slots)}
             editable={{
               isEditable: (rowData) =>
-                DateTime.fromISO(rowData.ofDate) >= DateTime.now(),
+                DateTime.fromISO(rowData.ofDate) > DateTime.now(),
               onRowUpdate: (newData, oldData) =>
                 new Promise((resolve, reject) => {
                   setTimeout(() => {
@@ -342,7 +391,7 @@ export default function EditField({ match }) {
             }}
             options={{ actionsColumnIndex: -1, search: false }}
           />
-          <List>
+          {/* <List>
             {field.slots &&
               field.slots.map((slot, index) => {
                 return (
@@ -386,9 +435,9 @@ export default function EditField({ match }) {
                             <br />
                           </>
                         }
-                      />
-                      {/* {!field.openForBooking && ( */}
-                      <ListItemSecondaryAction>
+                      /> */}
+          {/* {!field.openForBooking && ( */}
+          {/* <ListItemSecondaryAction>
                         <IconButton
                           edge="end"
                           aria-label="up"
@@ -399,7 +448,7 @@ export default function EditField({ match }) {
                         </IconButton>
                       </ListItemSecondaryAction>
                       {/* )} */}
-                    </ListItem>
+          {/* </ListItem>
                     <Divider
                       style={{ backgroundColor: "rgb(106, 106, 106)" }}
                       component="li"
@@ -407,7 +456,7 @@ export default function EditField({ match }) {
                   </span>
                 )
               })}
-          </List>
+          </List>  */}
         </div>
       </Card>
     </div>

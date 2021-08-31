@@ -37,50 +37,51 @@ export default function NewSlot(props) {
     price: "",
     startDate: DateTime.now().toISODate(),
     endDate: DateTime.now().toISODate(),
+    error: "",
   })
-  const clickCheck = () => {
-    let startDate = DateTime.fromISO(values.startDate)
-    let endDate = DateTime.fromISO(values.endDate)
-    // let duration = endDate.diff(startDate).shiftTo("days").as("days")
+  // const clickCheck = () => {
+  //   let startDate = DateTime.fromISO(values.startDate)
+  //   let endDate = DateTime.fromISO(values.endDate)
+  //   // let duration = endDate.diff(startDate).shiftTo("days").as("days")
 
-    let startTime = DateTime.fromISO(values.startTime)
-    let endTime = DateTime.fromISO(values.endTime)
+  //   let startTime = DateTime.fromISO(values.startTime)
+  //   let endTime = DateTime.fromISO(values.endTime)
 
-    let startMoment = DateTime.fromISO(
-      startDate.toISODate() + "T" + startTime.toISOTime()
-    )
+  //   let startMoment = DateTime.fromISO(
+  //     startDate.toISODate() + "T" + startTime.toISOTime()
+  //   )
 
-    let endMoment = DateTime.fromISO(
-      endDate.toISODate() + "T" + endTime.toISOTime()
-    )
+  //   let endMoment = DateTime.fromISO(
+  //     endDate.toISODate() + "T" + endTime.toISOTime()
+  //   )
 
-    let slotStart = DateTime.fromISO(
-      startDate.toISODate() + "T" + startTime.toISOTime()
-    )
-    let slotEnd = DateTime.fromISO(
-      startDate.toISODate() + "T" + endTime.toISOTime()
-    )
+  //   let slotStart = DateTime.fromISO(
+  //     startDate.toISODate() + "T" + startTime.toISOTime()
+  //   )
+  //   let slotEnd = DateTime.fromISO(
+  //     startDate.toISODate() + "T" + endTime.toISOTime()
+  //   )
 
-    let slotDay = startMoment.toFormat("EEEE")
+  //   let slotDay = startMoment.toFormat("EEEE")
 
-    let slotDuration = slotEnd.diff(slotStart).toFormat("mm")
+  //   let slotDuration = slotEnd.diff(slotStart).toFormat("mm")
 
-    while (endMoment > startMoment) {
-      values.ofDate = startMoment
-      values.startTime = startMoment
-      values.endTime = startMoment.plus({ minutes: slotDuration })
-      // console.log(
-      //   DateTime.fromISO(values.ofDate).toLocaleString(DateTime.DATETIME_MED)
-      // )
-      // console.log(
-      //   DateTime.fromISO(values.startTime).toLocaleString(DateTime.TIME_SIMPLE)
-      // )
-      // console.log(
-      //   DateTime.fromISO(values.endTime).toLocaleString(DateTime.TIME_SIMPLE)
-      // )
-      startMoment = startMoment.plus({ days: 1 })
-    }
-  }
+  //   while (endMoment > startMoment) {
+  //     values.ofDate = startMoment
+  //     values.startTime = startMoment
+  //     values.endTime = startMoment.plus({ minutes: slotDuration })
+  //     // console.log(
+  //     //   DateTime.fromISO(values.ofDate).toLocaleString(DateTime.DATETIME_MED)
+  //     // )
+  //     // console.log(
+  //     //   DateTime.fromISO(values.startTime).toLocaleString(DateTime.TIME_SIMPLE)
+  //     // )
+  //     // console.log(
+  //     //   DateTime.fromISO(values.endTime).toLocaleString(DateTime.TIME_SIMPLE)
+  //     // )
+  //     startMoment = startMoment.plus({ days: 1 })
+  //   }
+  // }
   const clickSubmit = () => {
     let startDate = DateTime.fromISO(values.startDate)
     let endDate = DateTime.fromISO(values.endDate)
@@ -102,8 +103,6 @@ export default function NewSlot(props) {
     let slotEnd = DateTime.fromISO(
       startDate.toISODate() + "T" + endTime.toISOTime()
     )
-
-    let slotDay = startMoment.toFormat("EEEE")
 
     let slotDuration = slotEnd.diff(slotStart).toFormat("mm")
 
@@ -183,6 +182,7 @@ export default function NewSlot(props) {
           <DialogTitle id="form-dialog-title">Add New Slot</DialogTitle>
           <DialogContent>
             <TextField
+              required
               margin="dense"
               label="Price"
               type="number"
@@ -243,6 +243,14 @@ export default function NewSlot(props) {
             </MuiPickersUtilsProvider>
             <br />
           </DialogContent>
+          {values.error && (
+            <Typography component="p" color="error">
+              <Icon color="error" className={classes.error}>
+                error
+              </Icon>
+              {values.error}
+            </Typography>
+          )}
 
           <DialogActions>
             <Button onClick={handleClose} color="primary" variant="contained">

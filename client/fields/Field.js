@@ -30,7 +30,7 @@ import { DateTime } from "luxon"
 
 const useStyles = makeStyles((theme) => ({
   root: theme.mixins.gutters({
-    maxWidth: 800,
+    maxWidth: 1000,
     margin: "auto",
     padding: theme.spacing(2),
     marginTop: theme.spacing(12),
@@ -42,17 +42,17 @@ const useStyles = makeStyles((theme) => ({
   card: {
     padding: "20px 0px 40px",
   },
+  table: {
+    width: 970,
+    padding: theme.spacing(2),
+  },
   content: {
     maxWidth: 800,
     margin: "auto",
   },
-  table: {
-    width: 770,
-    padding: theme.spacing(2),
-  },
-  list: {
-    display: "flex",
-  },
+  // list: {
+  //   display: "flex",
+  // },
   subheading: {
     margin: "10px",
     color: theme.palette.openTitle,
@@ -196,20 +196,7 @@ export default function Field({ match }) {
     if (slots != undefined) {
       let allAvailableSlots = slots.reduce(function (validSlots, slot) {
         if (DateTime.now() < DateTime.fromISO(slot.ofDate)) {
-          let availbaleSlots = new Object()
-          availbaleSlots.ofDate = DateTime.fromISO(slot.ofDate).toISODate()
-          availbaleSlots.day = slot.day
-          availbaleSlots.startTime = DateTime.fromISO(slot.startTime).toFormat(
-            "hh':'mm a"
-          )
-          availbaleSlots.endTime = DateTime.fromISO(slot.endTime).toFormat(
-            "hh':'mm a"
-          )
-          availbaleSlots.duration = slot.duration + " mins"
-          availbaleSlots.price = slot.price
-          availbaleSlots.status =
-            slot.bookingStatus == false ? "Available" : "Booked"
-          validSlots.push(availbaleSlots)
+          validSlots.push(slot)
         }
         return validSlots
       }, [])
@@ -220,23 +207,15 @@ export default function Field({ match }) {
     if (slots != undefined) {
       let allAvailableSlots = slots.reduce(function (validSlots, slot) {
         if (DateTime.now() < DateTime.fromISO(slot.ofDate)) {
-          let availbaleSlots = new Object()
-          availbaleSlots.ofDate = DateTime.fromISO(slot.ofDate).toISODate()
-          availbaleSlots.day = slot.day
-          availbaleSlots.startTime = DateTime.fromISO(slot.startTime).toFormat(
-            "hh':'mm a"
-          )
-          availbaleSlots.endTime = DateTime.fromISO(slot.endTime).toFormat(
-            "hh':'mm a"
-          )
-          availbaleSlots.duration = slot.duration + " mins"
-          availbaleSlots.price = slot.price
-          validSlots.push(availbaleSlots)
+          validSlots.push(slots)
         }
         return validSlots
       }, [])
       return allAvailableSlots.length
     }
+  }
+  const handleBooking = () => {
+    console.log("It's a button!")
   }
 
   if (values.redirect) {
@@ -363,13 +342,55 @@ export default function Field({ match }) {
               </Typography>
             }
             columns={[
-              { title: "Date", field: "ofDate" },
+              {
+                title: "Date",
+                field: "ofDate",
+                render: (rowData) =>
+                  DateTime.fromISO(rowData.ofDate).toLocaleString(
+                    DateTime.DATE_SHORT
+                  ),
+              },
               { title: "Day", field: "day" },
-              { title: "Start Time", field: "startTime" },
-              { title: "End Time", field: "endTime" },
-              { title: "Duration", field: "duration" },
-              { title: "Cost", field: "price" },
-              { title: "Booking Status", field: "status" },
+              {
+                title: "Start Time",
+                field: "startTime",
+                render: (rowData) =>
+                  DateTime.fromISO(rowData.startTime).toLocaleString(
+                    DateTime.TIME_SIMPLE
+                  ),
+              },
+              {
+                title: "End Time",
+                field: "endTime",
+                render: (rowData) =>
+                  DateTime.fromISO(rowData.endTime).toLocaleString(
+                    DateTime.TIME_SIMPLE
+                  ),
+              },
+              {
+                title: "Duration",
+                field: "duration",
+                render: (rowData) => rowData.duration + " mins",
+              },
+              {
+                title: "Cost",
+                field: "price",
+                render: (rowData) => "BDT " + rowData.price,
+              },
+              {
+                title: "Status",
+                field: "bookingStatus",
+                render: (rowData) =>
+                  rowData.bookingStatus == false ? (
+                    <Button size="small" onClick={handleBooking}>
+                      Book
+                    </Button>
+                  ) : (
+                    <Button size="small" disabled>
+                      Booked
+                    </Button>
+                  ),
+              },
             ]}
             data={handleSlotInfo(field.slots)}
             components={{

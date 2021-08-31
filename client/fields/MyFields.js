@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import ListItemText from "@material-ui/core/ListItemText";
-import Avatar from "@material-ui/core/Avatar";
-import Icon from "@material-ui/core/Icon";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import Divider from "@material-ui/core/Divider";
-import auth from "./../auth/auth-helper";
-import { listByOwner } from "./api-field.js";
-import { Redirect, Link } from "react-router-dom";
+import React, { useState, useEffect } from "react"
+import { makeStyles } from "@material-ui/core/styles"
+import Paper from "@material-ui/core/Paper"
+import List from "@material-ui/core/List"
+import ListItem from "@material-ui/core/ListItem"
+import ListItemAvatar from "@material-ui/core/ListItemAvatar"
+import ListItemText from "@material-ui/core/ListItemText"
+import Avatar from "@material-ui/core/Avatar"
+import Icon from "@material-ui/core/Icon"
+import Button from "@material-ui/core/Button"
+import Typography from "@material-ui/core/Typography"
+import Divider from "@material-ui/core/Divider"
+import auth from "./../auth/auth-helper"
+import { listByOwner } from "./api-field.js"
+import { Redirect, Link } from "react-router-dom"
 
 const useStyles = makeStyles((theme) => ({
   root: theme.mixins.gutters({
@@ -42,18 +42,18 @@ const useStyles = makeStyles((theme) => ({
   listText: {
     marginLeft: 16,
   },
-}));
+}))
 
 export default function Myfields() {
-  const classes = useStyles();
-  const [fields, setfields] = useState([]);
-  const [redirectToSignin, setRedirectToSignin] = useState(false);
+  const classes = useStyles()
+  const [fields, setfields] = useState([])
+  const [redirectToSignin, setRedirectToSignin] = useState(false)
 
-  const jwt = auth.isAuthenticated();
+  const jwt = auth.isAuthenticated()
 
   useEffect(() => {
-    const abortController = new AbortController();
-    const signal = abortController.signal;
+    const abortController = new AbortController()
+    const signal = abortController.signal
 
     listByOwner(
       {
@@ -63,19 +63,19 @@ export default function Myfields() {
       signal
     ).then((data) => {
       if (data.error) {
-        setRedirectToSignin(true);
+        setRedirectToSignin(true)
       } else {
-        setfields(data);
+        setfields(data)
       }
-    });
+    })
 
     return function cleanup() {
-      abortController.abort();
-    };
-  }, []);
+      abortController.abort()
+    }
+  }, [])
 
   if (redirectToSignin) {
-    return <Redirect to="/signin" />;
+    return <Redirect to="/signin" />
   }
   return (
     <div>
@@ -90,7 +90,7 @@ export default function Myfields() {
             </Link>
           </span>
         </Typography>
-        <List dense>
+        <List>
           {fields.map((field, i) => {
             return (
               <Link to={"/owner/field/" + field._id} key={i}>
@@ -108,16 +108,16 @@ export default function Myfields() {
                   </ListItemAvatar>
                   <ListItemText
                     primary={field.fieldName}
-                    secondary={field.description}
+                    secondary={field.location}
                     className={classes.listText}
                   />
                 </ListItem>
                 <Divider />
               </Link>
-            );
+            )
           })}
         </List>
       </Paper>
     </div>
-  );
+  )
 }
