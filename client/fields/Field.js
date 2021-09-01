@@ -25,8 +25,8 @@ import auth from "../auth/auth-helper"
 import DeleteField from "./DeleteField"
 import NewSlot from "./NewSlot.js"
 import { bookingStats } from "./../booking/api-booking.js"
-import Book from "./../booking/Book"
 import { DateTime } from "luxon"
+import Book from "./../booking/Book"
 
 const useStyles = makeStyles((theme) => ({
   root: theme.mixins.gutters({
@@ -107,8 +107,8 @@ export default function Field({ match }) {
   const [stats, setStats] = useState({})
   const [field, setField] = useState({ fieldOwner: {} })
   const [values, setValues] = useState({
-    error: "",
     redirect: false,
+    error: "",
   })
   const [open, setOpen] = useState(false)
   const jwt = auth.isAuthenticated()
@@ -402,12 +402,11 @@ export default function Field({ match }) {
                 return (
                   auth.isAuthenticated().user &&
                   auth.isAuthenticated().user._id == field.fieldOwner._id &&
-                  (!field.openForBooking ||
-                    (field.openForBooking && (
-                      <span className={classes.action}>
-                        <NewSlot fieldId={field._id} addSlot={addSlot} />
-                      </span>
-                    )))
+                  !field.openForBooking && (
+                    <span className={classes.action}>
+                      <NewSlot fieldId={field._id} addSlot={addSlot} />
+                    </span>
+                  )
                 )
               },
             }}

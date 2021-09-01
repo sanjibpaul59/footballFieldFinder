@@ -1,17 +1,16 @@
-import React from "react";
-import { Route, Switch } from "react-router-dom";
-import Home from "./core/Home";
-import Signup from "./user/Signup";
-import Signin from "./auth/Signin";
-import EditProfile from "./user/EditProfile";
-import Profile from "./user/Profile";
-import NewField from "./fields/NewField";
-import Field from "./fields/Field";
-import Fields from "./fields/Fields";
-import EditField from "./fields/EditField";
-import PrivateRoute from "./auth/PrivateRoute";
-import Menu from "./core/Menu";
-import Myfields from "./fields/MyFields";
+import React from "react"
+import { Route, Switch } from "react-router-dom"
+import Home from "./core/Home"
+import Signup from "./user/Signup"
+import Signin from "./auth/Signin"
+import EditProfile from "./user/EditProfile"
+import Profile from "./user/Profile"
+import NewField from "./fields/NewField"
+import Field from "./fields/Field"
+import EditField from "./fields/EditField"
+import PrivateRoute from "./auth/PrivateRoute"
+import Menu from "./core/Menu"
+import Myfields from "./fields/MyFields"
 
 const MainRouter = () => {
   return (
@@ -25,7 +24,6 @@ const MainRouter = () => {
         <PrivateRoute path="/user/edit/:userId" component={EditProfile} />
         <Route path="/user/:userId" component={Profile} />
         //Open for all visitors
-        <Route path="/fields" component={Fields} />
         <Route path="/field/:fieldId" component={Field} />
         //For the field owners
         <PrivateRoute path="/owner/my-fields" component={Myfields} />
@@ -37,7 +35,7 @@ const MainRouter = () => {
         <PrivateRoute path="/owner/field/:fieldId" component={Field} />
       </Switch>
     </div>
-  );
-};
+  )
+}
 
-export default MainRouter;
+export default MainRouter

@@ -17,7 +17,7 @@ export default function Book(props) {
   const [values, setValues] = useState({
     bookingId: "",
     error: "",
-    redirec: false,
+    redirect: false,
   })
   const jwt = auth.isAuthenticated()
 

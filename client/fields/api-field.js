@@ -7,24 +7,24 @@ const create = async (params, credentials, fieldData) => {
         Authorization: "Bearer " + credentials.t,
       },
       body: fieldData,
-    });
-    return response.json();
+    })
+    return response.json()
   } catch (err) {
-    console.log(err);
+    console.log(err)
   }
-};
+}
 
 const list = async (signal) => {
   try {
     let response = await fetch("api/fields/", {
       method: "GET",
       signal: signal,
-    });
-    return await response.json();
+    })
+    return await response.json()
   } catch (err) {
-    console.log(err);
+    console.log(err)
   }
-};
+}
 
 const read = async (params, signal) => {
   try {
@@ -35,12 +35,12 @@ const read = async (params, signal) => {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-    });
-    return await response.json();
+    })
+    return await response.json()
   } catch (err) {
-    console.log(err);
+    console.log(err)
   }
-};
+}
 
 const update = async (params, credentials, field) => {
   try {
@@ -51,12 +51,12 @@ const update = async (params, credentials, field) => {
         Authorization: "Bearer " + credentials.t,
       },
       body: field,
-    });
-    return await response.json();
+    })
+    return await response.json()
   } catch (err) {
-    console.log(err);
+    console.log(err)
   }
-};
+}
 
 const remove = async (params, credentials) => {
   try {
@@ -67,12 +67,12 @@ const remove = async (params, credentials) => {
         "Content-Type": "application/json",
         Authorization: "Bearer " + credentials.t,
       },
-    });
-    return await response.json();
+    })
+    return await response.json()
   } catch (err) {
-    console.log(err);
+    console.log(err)
   }
-};
+}
 
 const listByOwner = async (params, credentials, signal) => {
   try {
@@ -83,12 +83,12 @@ const listByOwner = async (params, credentials, signal) => {
         Accept: "application/json",
         Authorization: "Bearer " + credentials.t,
       },
-    });
-    return response.json();
+    })
+    return response.json()
   } catch (err) {
-    console.log(err);
+    console.log(err)
   }
-};
+}
 const newSlot = async (params, credentials, slot) => {
   try {
     let response = await fetch("/api/fields/" + params.fieldId + "/slot/new", {
@@ -99,12 +99,12 @@ const newSlot = async (params, credentials, slot) => {
         Authorization: "Bearer " + credentials.t,
       },
       body: JSON.stringify({ slot: slot }),
-    });
-    return response.json();
+    })
+    return response.json()
   } catch (err) {
-    console.log(err);
+    console.log(err)
   }
-};
+}
 
 const listOpenFields = async (signal) => {
   try {
@@ -115,12 +115,12 @@ const listOpenFields = async (signal) => {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-    });
-    return await response.json();
+    })
+    return await response.json()
   } catch (err) {
-    console.log(err);
+    console.log(err)
   }
-};
+}
 
 export {
   create,
@@ -131,4 +131,4 @@ export {
   listByOwner,
   newSlot,
   listOpenFields,
-};
+}

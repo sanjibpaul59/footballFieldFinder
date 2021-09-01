@@ -1,15 +1,19 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
-import Typography from "@material-ui/core/Typography";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
-import fieldInIsland from "./../assets/images/fieldInIsland.jpg";
-import SportsSoccerIcon from "@material-ui/icons/SportsSoccer";
-import LocationSearchingIcon from "@material-ui/icons/LocationSearching";
-import BookIcon from "@material-ui/icons/Book";
+import React, { useEffect, useState } from "react"
+import { makeStyles } from "@material-ui/core/styles"
+import Card from "@material-ui/core/Card"
+import CardContent from "@material-ui/core/CardContent"
+import CardMedia from "@material-ui/core/CardMedia"
+import Typography from "@material-ui/core/Typography"
+import Paper from "@material-ui/core/Paper"
+import Grid from "@material-ui/core/Grid"
+import fieldInIsland from "./../assets/images/fieldInIsland.jpg"
+import SportsSoccerIcon from "@material-ui/icons/SportsSoccer"
+import LocationSearchingIcon from "@material-ui/icons/LocationSearching"
+import BookIcon from "@material-ui/icons/Book"
+
+import auth from "./../auth/auth-helper"
+import { listOpenFields } from "../fields/api-field"
+import Fields from "./../fields/Fields"
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -61,10 +65,26 @@ const useStyles = makeStyles((theme) => ({
   mottoIcon: {
     fontSize: 48,
   },
-}));
+}))
 
 export default function Home() {
-  const classes = useStyles();
+  const classes = useStyles()
+  const [fields, setFields] = useState([])
+  useEffect(() => {
+    const abortController = new AbortController()
+    const signal = abortController.signal
+
+    listOpenFields(signal).then((data) => {
+      if (data.error) {
+        console.log(data.error)
+      } else {
+        setFields(data)
+      }
+    })
+    return function cleanup() {
+      abortController.abort()
+    }
+  }, [])
   return (
     <div>
       <Card className={classes.card} elevation={0}>
@@ -133,6 +153,16 @@ export default function Home() {
           </Grid>
         </Grid>
       </div>
+      <Card className={classes.card}>
+        <Typography variant="h5" component="h2">
+          All Fields
+        </Typography>
+        {fields.length != 0 ? (
+          <Fields fields={fields} />
+        ) : (
+          <Typography variant="h5">There is no fields to show</Typography>
+        )}
+      </Card>
     </div>
-  );
+  )
 }
