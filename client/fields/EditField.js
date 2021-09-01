@@ -403,7 +403,29 @@ export default function EditField({ match }) {
                 )
               },
             }}
-            options={{ actionsColumnIndex: -1, search: false }}
+            options={{
+              actionsColumnIndex: -1,
+              search: false,
+              rowStyle: (rowData) => ({
+                backgroundColor:
+                  DateTime.fromISO(rowData.ofDate) < DateTime.now()
+                    ? "#9e9e9e"
+                    : DateTime.fromISO(rowData.ofDate) > DateTime.now() &&
+                      rowData.bookingStatus == true
+                    ? "#ff80ab"
+                    : DateTime.fromISO(rowData.ofDate) > DateTime.now() &&
+                      rowData.bookingStatus == false
+                    ? "#81c784"
+                    : "#fafafa",
+                // rowData.bookingStatus == true
+                //   ? "#ff80ab"
+                //   : rowData.bookingStatus == false
+                //   ? "#81c784"
+                //   : DateTime.fromISO(rowData.ofDate) < DateTime.now()
+                //   ? "#9e9e9e"
+                //   : "#fafafa",
+              }),
+            }}
           />
           {/* <List>
             {field.slots &&

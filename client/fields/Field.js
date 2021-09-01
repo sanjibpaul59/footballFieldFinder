@@ -27,6 +27,7 @@ import NewSlot from "./NewSlot.js"
 import { bookingStats } from "./../booking/api-booking.js"
 import { DateTime } from "luxon"
 import Book from "./../booking/Book"
+import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart"
 
 const useStyles = makeStyles((theme) => ({
   root: theme.mixins.gutters({
@@ -100,6 +101,10 @@ const useStyles = makeStyles((theme) => ({
   enroll: {
     float: "right",
   },
+  bookingBtn: {
+    backgroundColor: "#43a047",
+    color: "#e3f2fd",
+  },
 }))
 
 export default function Field({ match }) {
@@ -161,7 +166,6 @@ export default function Field({ match }) {
   }
 
   const clickOpenForBooking = () => {
-    console.log(field.facilities)
     if (field.slots.length > 0) {
       setOpen(true)
     }
@@ -233,13 +237,21 @@ export default function Field({ match }) {
           title={field.fieldName}
           subheader={
             <div>
-              <Link
-                to={"/user/" + field.fieldOwner._id}
-                className={classes.sub}
-              >
-                {" "}
-                By {field.fieldOwner.name}
-              </Link>
+              {auth.isAuthenticated().user ? (
+                <span>
+                  <Link
+                    to={"/user/" + field.fieldOwner._id}
+                    className={classes.sub}
+                  >
+                    {" "}
+                    By {field.fieldOwner.name}
+                  </Link>
+                </span>
+              ) : (
+                <Typography className={classes.sub} variant="body1">
+                  By {field.fieldOwner.name}
+                </Typography>
+              )}
               {/* <span className={classes.category}>
                 Location: {field.location}
               </span> */}
@@ -278,14 +290,22 @@ export default function Field({ match }) {
                     )}
                   </span>
                 )}
-              {field.openForBooking && (
+              {field.openForBooking && auth.isAuthenticated().user ? (
                 <div>
                   <span className={classes.statSpan}>
                     <PeopleIcon /> {stats.totalBooked} booked{" "}
                   </span>
+                </div>
+              ) : (
+                <div>
                   <span className={classes.statSpan}>
-                    <CompletedIcon /> {stats.totalPlayed} times{" "}
+                    <Link to="/signup">Sign Up</Link>
                   </span>
+                  <span>/</span>
+                  <span className={classes.statSpan}>
+                    <Link to="/signin">Sign In</Link>
+                  </span>
+                  <span>for more Info</span>
                 </div>
               )}
             </>
@@ -382,16 +402,31 @@ export default function Field({ match }) {
                 field: "bookingStatus",
                 render: (rowData) =>
                   rowData.bookingStatus == false ? (
-                    <Button
-                      color="primary"
-                      size="small"
-                      onClick={handleBooking}
-                    >
-                      Book
-                    </Button>
+                    "Available"
                   ) : (
                     <Button color="secondary" size="small" disabled>
                       Booked
+                    </Button>
+                  ),
+              },
+              {
+                title: "Action",
+                field: "bookingStatus",
+                render: (rowData) =>
+                  rowData.bookingStatus == false ? (
+                    <Button
+                      className={classes.bookingBtn}
+                      size="small"
+                      variant="contained"
+                      onClick={handleBooking}
+                      disableElevation
+                      disableFocusRipple
+                    >
+                      <AddShoppingCartIcon />
+                    </Button>
+                  ) : (
+                    <Button color="secondary" size="small" disabled>
+                      <AddShoppingCartIcon />
                     </Button>
                   ),
               },
@@ -399,18 +434,25 @@ export default function Field({ match }) {
             data={handleSlotInfo(field.slots)}
             components={{
               Actions: () => {
-                return (
-                  auth.isAuthenticated().user &&
+                return auth.isAuthenticated().user &&
                   auth.isAuthenticated().user._id == field.fieldOwner._id &&
-                  !field.openForBooking && (
-                    <span className={classes.action}>
-                      <NewSlot fieldId={field._id} addSlot={addSlot} />
-                    </span>
-                  )
+                  !field.openForBooking ? (
+                  <span className={classes.action}>
+                    <NewSlot fieldId={field._id} addSlot={addSlot} />
+                  </span>
+                ) : (
+                  ""
                 )
               },
             }}
-            options={{ actionsColumnIndex: -1, search: false }}
+            options={{
+              actionsColumnIndex: -1,
+              search: false,
+              rowStyle: (rowData) => ({
+                backgroundColor:
+                  rowData.bookingStatus == true ? "#ff80ab" : "#81c784",
+              }),
+            }}
           />
         </div>
       </Card>

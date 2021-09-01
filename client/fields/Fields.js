@@ -4,6 +4,7 @@ import PropTypes from "prop-types"
 import { Link } from "react-router-dom"
 import auth from "./../auth/auth-helper"
 import Book from "./../booking/Book"
+import { DateTime } from "luxon"
 
 import { GridList, GridListTile, GridListTileBar } from "@material-ui/core"
 
@@ -52,47 +53,22 @@ export default function Fields(props) {
   //     return booked.field._id == field._id
   //   })
   // }
+  const handleAvailableSlot = (slots) => {
+    if (slots != undefined) {
+      let allAvailableSlots = slots.reduce(function (validSlots, slot) {
+        if (
+          DateTime.now() < DateTime.fromISO(slot.ofDate) &&
+          slot.bookingStatus == false
+        ) {
+          validSlots.push(slots)
+        }
+        return validSlots
+      }, [])
+      return allAvailableSlots.length
+    }
+  }
 
   return (
-    // <GridList cellHeight={220} classfieldName={classes.gridList} cols={2}>
-    //   {props.fields.map((field, i) => {
-    //     return (
-    //       findCommon(field) && (
-    //         <GridListTile
-    //           classfieldName={classes.tile}
-    //           key={i}
-    //           style={{ padding: 0 }}
-    //         >
-    //           <Link to={"/field/" + field._id}>
-    //             <img
-    //               src={"/api/fields/image/" + field._id}
-    //               alt={field.fieldfieldName}
-    //               classfieldName={classes.image}
-    //             />
-    //           </Link>
-    //           <GridListTileBar
-    //             classfieldName={classes.tileBar}
-    //             title={
-    //               <Link to={"/field" + field._id} classfieldName={classes.tileTitle}>
-    //                 {field.fieldfieldName}
-    //               </Link>
-    //             }
-    //             subtitle={<span>{field.location}</span>}
-    //             actionIcon={
-    //               <div classfieldName={classes.action}>
-    //                 {auth.isAuthenticated() ? (
-    //                   <Book fieldId={field._id} />
-    //                 ) : (
-    //                   <Link to="/signin">Signin to Book</Link>
-    //                 )}
-    //               </div>
-    //             }
-    //           />
-    //         </GridListTile>
-    //       )
-    //     )
-    //   })}
-    // </GridList>
     <GridList cellHeight={220} cols={2} className={classes.gridList}>
       {props.fields.map((field, i) => {
         return (
@@ -113,15 +89,20 @@ export default function Fields(props) {
               }
               subtitle={
                 <span>
-                  {field.location} || Available Slots: {field.slots.length}
+                  {field.location} || Available Slots:{" "}
+                  {handleAvailableSlot(field.slots)}
                 </span>
               }
               actionIcon={
                 <div className={classes.action}>
                   {auth.isAuthenticated() ? (
-                    <Book fieldId={field._id} />
+                    ""
                   ) : (
-                    <Link to="/signin">Sign in to Book</Link>
+                    // <Book fieldId={field._id} />
+                    <Link to="/signin" color="inherit">
+                      {" "}
+                      Sign in to Book{" "}
+                    </Link>
                   )}
                 </div>
               }
