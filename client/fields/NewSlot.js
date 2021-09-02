@@ -37,7 +37,7 @@ export default function NewSlot(props) {
     price: "",
     startDate: DateTime.now().toISODate(),
     endDate: DateTime.now().toISODate(),
-    ofField: "",
+
     error: "",
   })
   // const clickCheck = () => {
@@ -119,7 +119,6 @@ export default function NewSlot(props) {
         endTime: values.endTime || undefined,
         duration: slotDuration || 0,
         price: values.price || undefined,
-        ofField: props.fieldId || undefined,
       }
       console.log(slot)
       newSlot(

@@ -157,7 +157,7 @@ export default function Home() {
         <Typography variant="h5" component="h2">
           All Fields
         </Typography>
-        {fields.length != 0 ? (
+        {fields.length > 0 ? (
           <Fields fields={fields} />
         ) : (
           <Typography variant="h5">There is no fields to show</Typography>
