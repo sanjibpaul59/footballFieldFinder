@@ -10,6 +10,6 @@ const config = {
       ":" +
       (process.env.MONGO_PORT || "27017") +
       "/internProject",
-};
+}
 
-export default config;
+export default config

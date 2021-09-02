@@ -251,7 +251,7 @@ export default function NewField() {
             >
               <MenuItem value={"small"}>Small </MenuItem>
               <MenuItem value={"medium"}>Medium </MenuItem>
-              <MenuItem value={"large"}>large</MenuItem>
+              <MenuItem value={"large"}>Large</MenuItem>
             </Select>
           </FormControl>
           <br />

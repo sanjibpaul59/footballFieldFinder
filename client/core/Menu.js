@@ -6,8 +6,6 @@ import IconButton from "@material-ui/core/IconButton"
 import HomeIcon from "@material-ui/icons/Home"
 import Button from "@material-ui/core/Button"
 import SportsSoccerOutlinedIcon from "@material-ui/icons/SportsSoccerOutlined"
-import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline"
-import PersonAddOutlinedIcon from "@material-ui/icons/PersonAddOutlined"
 import AccountCircleOutlinedIcon from "@material-ui/icons/AccountCircleOutlined"
 import auth from "./../auth/auth-helper"
 import { Link, withRouter } from "react-router-dom"
@@ -93,33 +91,12 @@ const Menu = withRouter(({ history }) => (
             )}
             {auth.isAuthenticated() && (
               <span>
-                <Link to="/cart">
-                  <Button style={isActive(history, "/cart")}>
-                    Cart
-                    <Badge
-                      color="secondary"
-                      invisible={false}
-                      badgeContent={cart.itemTotal()}
-                      style={{ marginLeft: "7px" }}
-                    >
-                      <CartIcon />
-                    </Badge>
-                  </Button>
-                </Link>
                 {auth.isAuthenticated().user.owner && (
                   <span>
                     <Link to="/owner/my-fields">
                       <Button style={isPartActive(history, "/owner/my-fields")}>
                         <SportsSoccerOutlinedIcon style={iconStyle} />
                         My Fields
-                      </Button>
-                    </Link>
-                    <Link to="/owner/addManager">
-                      <Button
-                        style={isPartActive(history, "/owner/addManager")}
-                      >
-                        <PersonAddOutlinedIcon style={iconStyle} />
-                        Add Manager
                       </Button>
                     </Link>
                   </span>

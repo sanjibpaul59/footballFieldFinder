@@ -4,6 +4,18 @@
   "description": "Football field finfing web application",
   "author": "Sanjib",
   "license": "MIT",
+  "keywords": [
+    "mongodb",
+    "express",
+    "react",
+    "node",
+    "mern"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sanjibpaul59/footballFieldFinder.git"
+  },
+  "main": "./dist/server.generated.js",
   "scripts": {
     "development": "nodemon",
     "build": "webpack --config webpack.config.client.production.js && webpack --mode=production --config webpack.config.server.js",
@@ -28,6 +40,8 @@
     "@material-ui/core": "4.9.8",
     "@material-ui/icons": "4.9.1",
     "@material-ui/pickers": "^3.3.10",
+    "@stripe/react-stripe-js": "^1.4.1",
+    "@stripe/stripe-js": "^1.17.1",
     "body-parser": "1.19.0",
     "compression": "1.7.4",
     "cookie-parser": "1.4.5",
@@ -42,10 +56,12 @@
     "material-table": "^1.69.3",
     "mongoose": "5.9.7",
     "mongoose-autopopulate": "^0.14.0",
+    "query-string": "^7.0.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-hot-loader": "4.12.20",
     "react-router": "5.1.2",
-    "react-router-dom": "5.1.2"
+    "react-router-dom": "5.1.2",
+    "stripe": "^8.174.0"
   }
 }

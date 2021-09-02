@@ -80,21 +80,21 @@ const FieldSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  fieldOwner: {
-    type: mongoose.Schema.ObjectId,
-    ref: "User",
-  },
-  slots: [SlotSchema],
   facilities: [
     {
       type: String,
       required: [true, "Please Add available facilities to proceed."],
     },
   ],
+  slots: [SlotSchema],
   created: Date,
   updated: {
     type: Date,
     default: Date.now,
+  },
+  fieldOwner: {
+    type: mongoose.Schema.ObjectId,
+    ref: "User",
   },
 })
 
