@@ -108,7 +108,10 @@ const newSlot = async (req, res) => {
     let slot = req.body.slot
     let result = await Field.findByIdAndUpdate(
       req.field._id,
-      { $push: { slots: slot }, updated: Date.now() },
+      {
+        $push: { slots: slot },
+        updated: Date.now(),
+      },
       { new: true }
     )
       .populate("fieldOwner", "_id name email phone")

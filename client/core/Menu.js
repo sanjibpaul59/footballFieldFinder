@@ -11,6 +11,9 @@ import PersonAddOutlinedIcon from "@material-ui/icons/PersonAddOutlined"
 import AccountCircleOutlinedIcon from "@material-ui/icons/AccountCircleOutlined"
 import auth from "./../auth/auth-helper"
 import { Link, withRouter } from "react-router-dom"
+import cart from "../cart/cart-helper"
+import CartIcon from "@material-ui/icons/ShoppingCart"
+import Badge from "@material-ui/core/Badge"
 
 //skeleton function (don't remove)
 const isActive = (history, path) => {
@@ -67,6 +70,19 @@ const Menu = withRouter(({ history }) => (
           <span style={{ float: "right" }}>
             {!auth.isAuthenticated() && (
               <span>
+                <Link to="/cart">
+                  <Button style={isActive(history, "/cart")}>
+                    Cart
+                    <Badge
+                      color="secondary"
+                      invisible={false}
+                      badgeContent={cart.itemTotal()}
+                      style={{ marginLeft: "7px" }}
+                    >
+                      <CartIcon />
+                    </Badge>
+                  </Button>
+                </Link>
                 <Link to="/signup">
                   <Button style={isActive(history, "/signup")}>Sign up</Button>
                 </Link>
@@ -77,6 +93,19 @@ const Menu = withRouter(({ history }) => (
             )}
             {auth.isAuthenticated() && (
               <span>
+                <Link to="/cart">
+                  <Button style={isActive(history, "/cart")}>
+                    Cart
+                    <Badge
+                      color="secondary"
+                      invisible={false}
+                      badgeContent={cart.itemTotal()}
+                      style={{ marginLeft: "7px" }}
+                    >
+                      <CartIcon />
+                    </Badge>
+                  </Button>
+                </Link>
                 {auth.isAuthenticated().user.owner && (
                   <span>
                     <Link to="/owner/my-fields">

@@ -30,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
   },
   image: {
     height: "100%",
+    width: "90%",
   },
   tileBar: {
     backgroundColor: "rgba(0, 0, 0, 0.85)",
@@ -69,7 +70,7 @@ export default function Fields(props) {
   }
 
   return (
-    <GridList cellHeight={220} cols={2} className={classes.gridList}>
+    <GridList cellHeight={220} cols={3} className={classes.gridList}>
       {props.fields.map((field, i) => {
         return (
           <GridListTile key={i} style={{ padding: 0 }} className={classes.tile}>

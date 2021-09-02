@@ -27,6 +27,9 @@ const SlotSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  ofField: {
+    type: String,
+  },
 })
 
 const Slot = mongoose.model("Slot", SlotSchema)

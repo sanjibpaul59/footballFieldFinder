@@ -392,12 +392,11 @@ export default function EditField({ match }) {
                       {auth.isAuthenticated().user &&
                         auth.isAuthenticated().user._id ==
                           field.fieldOwner._id &&
-                        (!field.openForBooking ||
-                          (field.openForBooking && (
-                            <span className={classes.action}>
-                              <NewSlot fieldId={field._id} addSlot={addSlot} />
-                            </span>
-                          )))}
+                        !field.openForBooking && (
+                          <span className={classes.action}>
+                            <NewSlot fieldId={field._id} addSlot={addSlot} />
+                          </span>
+                        )}
                     </div>
                   </div>
                 )

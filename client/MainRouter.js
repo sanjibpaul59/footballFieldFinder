@@ -11,6 +11,7 @@ import EditField from "./fields/EditField"
 import PrivateRoute from "./auth/PrivateRoute"
 import Menu from "./core/Menu"
 import Myfields from "./fields/MyFields"
+import Cart from "./cart/Cart"
 
 const MainRouter = () => {
   return (
@@ -24,6 +25,7 @@ const MainRouter = () => {
         <PrivateRoute path="/user/edit/:userId" component={EditProfile} />
         <Route path="/user/:userId" component={Profile} />
         //Open for all visitors
+        <Route path="/cart" component={Cart} />
         <Route path="/field/:fieldId" component={Field} />
         //For the field owners
         <PrivateRoute path="/owner/my-fields" component={Myfields} />

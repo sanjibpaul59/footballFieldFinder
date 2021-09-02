@@ -28,6 +28,7 @@ import { bookingStats } from "./../booking/api-booking.js"
 import { DateTime } from "luxon"
 import Book from "./../booking/Book"
 import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart"
+import AddToCart from "../cart/AddToCart.js"
 
 const useStyles = makeStyles((theme) => ({
   root: theme.mixins.gutters({
@@ -104,6 +105,13 @@ const useStyles = makeStyles((theme) => ({
   bookingBtn: {
     backgroundColor: "#43a047",
     color: "#e3f2fd",
+  },
+  addCart: {
+    width: "35px",
+    height: "35px",
+    padding: "10px 12px",
+    borderRadius: "0.25em",
+    backgroundColor: "#5f7c8b",
   },
 }))
 
@@ -209,8 +217,12 @@ export default function Field({ match }) {
   }
   const handleAvailableSlots = (slots) => {
     if (slots != undefined) {
+      console.log(slots)
       let allAvailableSlots = slots.reduce(function (validSlots, slot) {
-        if (DateTime.now() < DateTime.fromISO(slot.ofDate)) {
+        if (
+          DateTime.now() < DateTime.fromISO(slot.ofDate) &&
+          slot.bookingStatus == false
+        ) {
           validSlots.push(slots)
         }
         return validSlots
@@ -297,6 +309,9 @@ export default function Field({ match }) {
                   </span>
                 </div>
               ) : (
+                ""
+              )}
+              {!auth.isAuthenticated().user && (
                 <div>
                   <span className={classes.statSpan}>
                     <Link to="/signup">Sign Up</Link>
@@ -352,15 +367,6 @@ export default function Field({ match }) {
         <div className={classes.table}>
           <MaterialTable
             style={{ fontSize: 15 }}
-            title={
-              <Typography variant="h6" className={classes.subheading}>
-                Available Slots{" "}
-                <Chip
-                  label={handleAvailableSlots(field.slots)}
-                  className={classes.subheading}
-                />
-              </Typography>
-            }
             columns={[
               {
                 title: "Date",
@@ -409,21 +415,13 @@ export default function Field({ match }) {
                     </Button>
                   ),
               },
+
               {
                 title: "Action",
                 field: "bookingStatus",
                 render: (rowData) =>
                   rowData.bookingStatus == false ? (
-                    <Button
-                      className={classes.bookingBtn}
-                      size="small"
-                      variant="contained"
-                      onClick={handleBooking}
-                      disableElevation
-                      disableFocusRipple
-                    >
-                      <AddShoppingCartIcon />
-                    </Button>
+                    <AddToCart cartStyle={classes.addCart} item={rowData} />
                   ) : (
                     <Button color="secondary" size="small" disabled>
                       <AddShoppingCartIcon />
@@ -433,15 +431,42 @@ export default function Field({ match }) {
             ]}
             data={handleSlotInfo(field.slots)}
             components={{
-              Actions: () => {
-                return auth.isAuthenticated().user &&
-                  auth.isAuthenticated().user._id == field.fieldOwner._id &&
-                  !field.openForBooking ? (
-                  <span className={classes.action}>
-                    <NewSlot fieldId={field._id} addSlot={addSlot} />
-                  </span>
-                ) : (
-                  ""
+              // Actions: () => {
+              //   return auth.isAuthenticated().user &&
+              //     auth.isAuthenticated().user._id == field.fieldOwner._id &&
+              //     !field.openForBooking ? (
+              //     <span className={classes.action}>
+              //       <NewSlot fieldId={field._id} addSlot={addSlot} />
+              //     </span>
+              //   ) : (
+              //     ""
+              //   )
+              // },
+
+              Toolbar: () => {
+                return (
+                  <div className={classes.tableTop}>
+                    <div>
+                      <Typography variant="h6" className={classes.subheading}>
+                        Available Slots
+                        <Chip
+                          label={handleAvailableSlots(field.slots)}
+                          className={classes.subheading}
+                        />
+                      </Typography>
+                    </div>
+                    <div className={classes.action}>
+                      {auth.isAuthenticated().user &&
+                        auth.isAuthenticated().user._id ==
+                          field.fieldOwner._id &&
+                        (!field.openForBooking ||
+                          (field.openForBooking && (
+                            <span className={classes.action}>
+                              <NewSlot fieldId={field._id} addSlot={addSlot} />
+                            </span>
+                          )))}
+                    </div>
+                  </div>
                 )
               },
             }}
