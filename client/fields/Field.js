@@ -295,7 +295,7 @@ export default function Field({ match }) {
                     )}
                   </span>
                 )}
-              {field.openForBooking && auth.isAuthenticated().user ? (
+              {/* {field.openForBooking && auth.isAuthenticated().user ? (
                 <div>
                   <span className={classes.statSpan}>
                     <PeopleIcon /> {stats.totalBooked} booked{" "}
@@ -303,7 +303,7 @@ export default function Field({ match }) {
                 </div>
               ) : (
                 ""
-              )}
+              )} */}
               {!auth.isAuthenticated().user && (
                 <div>
                   <span className={classes.statSpan}>

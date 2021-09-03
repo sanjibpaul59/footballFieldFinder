@@ -147,7 +147,6 @@ export default function EditField({ match }) {
     const dataUpdate = [...field.slots]
     const index = oldData.tableData.id
     dataUpdate[index] = newData
-
     setField({ ...field, slots: dataUpdate })
   }
   const handleRowDelete = (oldData) => {
@@ -183,9 +182,6 @@ export default function EditField({ match }) {
       }
     })
   }
-  const handleBooking = () => {
-    console.log("It's a button!")
-  }
 
   if (values.redirect) {
     return <Redirect to={"/owner/field/" + field._id} />
@@ -193,6 +189,7 @@ export default function EditField({ match }) {
   const imageUrl = field._id
     ? `/api/fields/image/${field._id}?${new Date().getTime()}`
     : "/api/fields/defaultphoto"
+
   return (
     <div className={classes.root}>
       <Card className={classes.card}>
