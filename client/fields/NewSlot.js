@@ -40,49 +40,6 @@ export default function NewSlot(props) {
 
     error: "",
   })
-  // const clickCheck = () => {
-  //   let startDate = DateTime.fromISO(values.startDate)
-  //   let endDate = DateTime.fromISO(values.endDate)
-  //   // let duration = endDate.diff(startDate).shiftTo("days").as("days")
-
-  //   let startTime = DateTime.fromISO(values.startTime)
-  //   let endTime = DateTime.fromISO(values.endTime)
-
-  //   let startMoment = DateTime.fromISO(
-  //     startDate.toISODate() + "T" + startTime.toISOTime()
-  //   )
-
-  //   let endMoment = DateTime.fromISO(
-  //     endDate.toISODate() + "T" + endTime.toISOTime()
-  //   )
-
-  //   let slotStart = DateTime.fromISO(
-  //     startDate.toISODate() + "T" + startTime.toISOTime()
-  //   )
-  //   let slotEnd = DateTime.fromISO(
-  //     startDate.toISODate() + "T" + endTime.toISOTime()
-  //   )
-
-  //   let slotDay = startMoment.toFormat("EEEE")
-
-  //   let slotDuration = slotEnd.diff(slotStart).toFormat("mm")
-
-  //   while (endMoment > startMoment) {
-  //     values.ofDate = startMoment
-  //     values.startTime = startMoment
-  //     values.endTime = startMoment.plus({ minutes: slotDuration })
-  //     // console.log(
-  //     //   DateTime.fromISO(values.ofDate).toLocaleString(DateTime.DATETIME_MED)
-  //     // )
-  //     // console.log(
-  //     //   DateTime.fromISO(values.startTime).toLocaleString(DateTime.TIME_SIMPLE)
-  //     // )
-  //     // console.log(
-  //     //   DateTime.fromISO(values.endTime).toLocaleString(DateTime.TIME_SIMPLE)
-  //     // )
-  //     startMoment = startMoment.plus({ days: 1 })
-  //   }
-  // }
   const clickSubmit = () => {
     let startDate = DateTime.fromISO(values.startDate)
     let endDate = DateTime.fromISO(values.endDate)

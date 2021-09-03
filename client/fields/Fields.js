@@ -3,7 +3,6 @@ import { makeStyles } from "@material-ui/core/styles"
 import PropTypes from "prop-types"
 import { Link } from "react-router-dom"
 import auth from "./../auth/auth-helper"
-import Book from "./../booking/Book"
 import { DateTime } from "luxon"
 
 import { GridList, GridListTile, GridListTileBar } from "@material-ui/core"
@@ -49,11 +48,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Fields(props) {
   const classes = useStyles()
-  // const findCommon = (field) => {
-  //   return !props.common.find((booked) => {
-  //     return booked.field._id == field._id
-  //   })
-  // }
   const handleAvailableSlot = (slots) => {
     if (slots != undefined) {
       let allAvailableSlots = slots.reduce(function (validSlots, slot) {
@@ -99,7 +93,6 @@ export default function Fields(props) {
                   {auth.isAuthenticated() ? (
                     ""
                   ) : (
-                    // <Book fieldId={field._id} />
                     <Link to="/signin" color="inherit">
                       {" "}
                       Sign in to Book{" "}

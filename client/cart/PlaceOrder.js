@@ -1,7 +1,6 @@
 import React, { useState } from "react"
 import PropTypes from "prop-types"
 import Button from "@material-ui/core/Button"
-import auth from "./../auth/auth-helper"
 import { makeStyles, Typography } from "@material-ui/core"
 import cart from "./cart-helper"
 
@@ -29,8 +28,9 @@ export default function PlaceOrder(props) {
   })
   const setMessage = () => {
     const message = "Successfully Booked!"
-    setValues({ ...values, message: message })
-    cart.emptyCart()
+    cart.emptyCart(() => {
+      setValues({ ...values, message: message })
+    })
   }
   return (
     <div className={classes.checkout}>

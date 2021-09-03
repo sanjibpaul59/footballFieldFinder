@@ -126,29 +126,14 @@ export default function EditField({ match }) {
     const value = name === "image" ? event.target.files[0] : event.target.value
     setField({ ...field, [name]: value })
   }
-  const handleSlotChange = (name, index) => (event) => {
-    const slots = field.slots
-    slots[index][name] = event.target.value
-    setField({ ...field, slots: slots })
-  }
-  const deleteSlot = (index) => (event) => {
-    const slots = field.slots
-    slots.splice(index, 1)
-    setField({ ...field, slots: slots })
-  }
+
   const addSlot = (field) => {
     setField(field)
   }
   const removeField = (field) => {
     setValues({ ...values, redirect: true })
   }
-  const moveUp = (index) => (event) => {
-    const slots = field.slots
-    const moveUp = slots[index]
-    slots[index] = slots[index - 1]
-    slots[index - 1] = moveUp
-    setField({ ...field, slots: slots })
-  }
+
   const handleSlotInfo = (slots) => {
     if (slots != undefined) {
       let allSlots
@@ -416,82 +401,9 @@ export default function EditField({ match }) {
                       rowData.bookingStatus == false
                     ? "#81c784"
                     : "#fafafa",
-                // rowData.bookingStatus == true
-                //   ? "#ff80ab"
-                //   : rowData.bookingStatus == false
-                //   ? "#81c784"
-                //   : DateTime.fromISO(rowData.ofDate) < DateTime.now()
-                //   ? "#9e9e9e"
-                //   : "#fafafa",
               }),
             }}
           />
-          {/* <List>
-            {field.slots &&
-              field.slots.map((slot, index) => {
-                return (
-                  <span key={index}>
-                    <ListItem className={classes.list}>
-                      <ListItemAvatar>
-                        <>
-                          <Avatar>{index + 1}</Avatar>
-                          {index != 0 && (
-                            <IconButton
-                              aria-label="up"
-                              color="primary"
-                              onClick={moveUp(index)}
-                              className={classes.upArrow}
-                            >
-                              <ArrowUp />
-                            </IconButton>
-                          )}
-                        </>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={
-                          <>
-                            <TextField
-                              margin="dense"
-                              label="Price"
-                              type="text"
-                              fullWidth
-                              value={slot.price}
-                              onChange={handleSlotChange("price", index)}
-                            />
-                            <br />
-                            <TextField
-                              margin="dense"
-                              label="Day"
-                              type="text"
-                              fullWidth
-                              value={slot.day}
-                              onChange={handleSlotChange("day", index)}
-                            />
-                            <br />
-                          </>
-                        }
-                      /> */}
-          {/* {!field.openForBooking && ( */}
-          {/* <ListItemSecondaryAction>
-                        <IconButton
-                          edge="end"
-                          aria-label="up"
-                          color="primary"
-                          onClick={deleteSlot(index)}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </ListItemSecondaryAction>
-                      {/* )} */}
-          {/* </ListItem>
-                    <Divider
-                      style={{ backgroundColor: "rgb(106, 106, 106)" }}
-                      component="li"
-                    />
-                  </span>
-                )
-              })}
-          </List>  */}
         </div>
       </Card>
     </div>

@@ -1,12 +1,8 @@
 import React, { useState } from "react"
 import auth from "./../auth/auth-helper"
 import Card from "@material-ui/core/Card"
-import CardContent from "@material-ui/core/CardContent"
-import CardMedia from "@material-ui/core/CardMedia"
 import Button from "@material-ui/core/Button"
-import TextField from "@material-ui/core/TextField"
 import Typography from "@material-ui/core/Typography"
-import Divider from "@material-ui/core/Divider"
 import PropTypes from "prop-types"
 import { makeStyles } from "@material-ui/core/styles"
 import cart from "./cart-helper.js"
@@ -238,88 +234,6 @@ export default function CartItems(props) {
           No items added to your cart.
         </Typography>
       )}
-
-      {/* {cartItems.length > 0 ? (
-        <span>
-          {cartItems.map((item, i) => {
-            return (
-              <span key={i}>
-                <Card className={classes.cart}>
-                  <CardMedia
-                    className={classes.cover}
-                    image={"/api/field/image/" + item.ofField}
-                    title={item.ofDate}
-                  />
-                  <div className={classes.details}>
-                    <CardContent className={classes.content}>
-                      <Link to={"/field/" + item._id}>
-                        <Typography
-                          type="title"
-                          component="h3"
-                          className={classes.fieldTitle}
-                          color="primary"
-                        >
-                          {item.startTime}
-                        </Typography>
-                      </Link>
-                      <div>
-                        <Typography
-                          type="subheading"
-                          component="h3"
-                          className={classes.price}
-                          color="primary"
-                        >
-                          $ {item.price}
-                        </Typography>
-
-                        <span className={classes.itemShop}>
-                          Shop: {item.endTime}
-                        </span>
-                      </div>
-                    </CardContent>
-                    <div className={classes.subheading}>
-                      <Button
-                        className={classes.removeButton}
-                        color="primary"
-                        onClick={removeItem(i)}
-                      >
-                        x Remove
-                      </Button>
-                    </div>
-                  </div>
-                </Card>
-                <Divider />
-              </span>
-            )
-          })}
-          <div className={classes.checkout}>
-            <span className={classes.total}>Total: ${getTotal()}</span>
-            {!props.checkout &&
-              (auth.isAuthenticated() ? (
-                <Button
-                  color="secondary"
-                  variant="contained"
-                  onClick={openCheckout}
-                >
-                  Checkout
-                </Button>
-              ) : (
-                <Link to="/signin">
-                  <Button color="primary" variant="contained">
-                    Sign in to checkout
-                  </Button>
-                </Link>
-              ))}
-            <Link to="/" className={classes.continueBtn}>
-              <Button variant="contained">Continue Shopping</Button>
-            </Link>
-          </div>
-        </span>
-      ) : (
-        <Typography variant="subtitle1" component="h3" color="primary">
-          No items added to your cart.
-        </Typography>
-      )} */}
     </Card>
   )
 }

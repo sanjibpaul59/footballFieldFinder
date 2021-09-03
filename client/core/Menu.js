@@ -39,14 +39,14 @@ const iconStyle = {
   color: "inherit",
   fontSize: "medium",
 }
-//Don't remove
+
 const Menu = withRouter(({ history }) => (
   <div style={flexStyle}>
     <AppBar
       position="sticky"
       style={{ zIndex: 12343455, backgroundColor: "#fafafa", color: "#212121" }}
     >
-      <Toolbar variant="dense">
+      <Toolbar>
         <div style={{ padding: 3 }}>
           <Link to="/">
             <IconButton

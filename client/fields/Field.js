@@ -6,7 +6,6 @@ import Typography from "@material-ui/core/Typography"
 import IconButton from "@material-ui/core/IconButton"
 import Edit from "@material-ui/icons/Edit"
 import PeopleIcon from "@material-ui/icons/Group"
-import CompletedIcon from "@material-ui/icons/VerifiedUser"
 import Button from "@material-ui/core/Button"
 import Divider from "@material-ui/core/Divider"
 import Dialog from "@material-ui/core/Dialog"
@@ -26,7 +25,6 @@ import DeleteField from "./DeleteField"
 import NewSlot from "./NewSlot.js"
 import { bookingStats } from "./../booking/api-booking.js"
 import { DateTime } from "luxon"
-import Book from "./../booking/Book"
 import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart"
 import AddToCart from "../cart/AddToCart.js"
 
@@ -52,9 +50,6 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 800,
     margin: "auto",
   },
-  // list: {
-  //   display: "flex",
-  // },
   subheading: {
     margin: "10px",
     color: theme.palette.openTitle,
@@ -215,7 +210,7 @@ export default function Field({ match }) {
         }
         return validSlots
       }, [])
-      console.log(allAvailableSlots)
+
       return allAvailableSlots
     }
   }
@@ -232,9 +227,6 @@ export default function Field({ match }) {
       }, [])
       return allAvailableSlots.length
     }
-  }
-  const handleBooking = () => {
-    console.log("It's a button!")
   }
 
   if (values.redirect) {
@@ -267,9 +259,7 @@ export default function Field({ match }) {
                   By {field.fieldOwner.name}
                 </Typography>
               )}
-              {/* <span className={classes.category}>
-                Location: {field.location}
-              </span> */}
+
               <span className={classes.category}>
                 Contact: {field.fieldOwner.phone}
               </span>
@@ -428,18 +418,6 @@ export default function Field({ match }) {
             ]}
             data={handleSlotInfo(field)}
             components={{
-              // Actions: () => {
-              //   return auth.isAuthenticated().user &&
-              //     auth.isAuthenticated().user._id == field.fieldOwner._id &&
-              //     !field.openForBooking ? (
-              //     <span className={classes.action}>
-              //       <NewSlot fieldId={field._id} addSlot={addSlot} />
-              //     </span>
-              //   ) : (
-              //     ""
-              //   )
-              // },
-
               Toolbar: () => {
                 return (
                   <div className={classes.tableTop}>
