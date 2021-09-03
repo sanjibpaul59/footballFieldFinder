@@ -6,6 +6,7 @@ import Typography from "@material-ui/core/Typography"
 import Icon from "@material-ui/core/Icon"
 import auth from "./../auth/auth-helper"
 import cart from "./cart-helper.js"
+import PlaceOrder from "./PlaceOrder"
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -20,18 +21,6 @@ const useStyles = makeStyles((theme) => ({
   subheading: {
     color: "rgba(88, 114, 128, 0.87)",
     marginTop: "20px",
-  },
-  addressField: {
-    marginTop: "4px",
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: "45%",
-  },
-  streetField: {
-    marginTop: "4px",
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: "93%",
   },
   textField: {
     marginLeft: theme.spacing(1),
@@ -58,12 +47,11 @@ export default function Checkout() {
     setValues({ ...values, checkoutDetails: checkoutDetails })
   }
 
-  // const handleAddressChange = name => event => {
-  //   let checkoutDetails = values.checkoutDetails
-  //   checkoutDetails.delivery_address[name] = event.target.value || undefined
-  //   setValues({...values, checkoutDetails: checkoutDetails})
-  // }
-
+  const getTotal = () => {
+    return values.checkoutDetails.slots.reduce((a, b) => {
+      return a + b.slot.price
+    }, 0)
+  }
   return (
     <Card className={classes.card}>
       <Typography type="title" className={classes.title}>
@@ -88,14 +76,20 @@ export default function Checkout() {
         margin="normal"
       />
       <br />
-      {/* <Typography type="subheading" component="h3" className={classes.subheading}>
-            Delivery Address
-        </Typography>
-        <TextField id="street" label="Street Address" className={classes.streetField} value={values.checkoutDetails.delivery_address.street} onChange={handleAddressChange('street')} margin="normal"/><br/>
-        <TextField id="city" label="City" className={classes.addressField} value={values.checkoutDetails.delivery_address.city} onChange={handleAddressChange('city')} margin="normal"/>
-        <TextField id="state" label="State" className={classes.addressField} value={values.checkoutDetails.delivery_address.state} onChange={handleAddressChange('state')} margin="normal"/><br/>
-        <TextField id="zipcode" label="Zip Code" className={classes.addressField} value={values.checkoutDetails.delivery_address.zipcode} onChange={handleAddressChange('zipcode')} margin="normal"/>
-        <TextField id="country" label="Country" className={classes.addressField} value={values.checkoutDetails.delivery_address.country} onChange={handleAddressChange('country')} margin="normal"/> */}
+      <TextField
+        disabled
+        className={classes.textField}
+        label="Number of Slots"
+        value={values.checkoutDetails.slots.length}
+        margin="normal"
+      />
+      <TextField
+        disabled
+        className={classes.textField}
+        label="Total Cost"
+        value={getTotal()}
+        margin="normal"
+      />
       <br />{" "}
       {values.error && (
         <Typography component="p" color="error">
@@ -106,9 +100,7 @@ export default function Checkout() {
         </Typography>
       )}
       <div>
-        {/* <Elements>
-          <PlaceOrder checkoutDetails={values.checkoutDetails} />
-        </Elements> */}
+        <PlaceOrder checkoutDetails={values.checkoutDetails} />
       </div>
     </Card>
   )

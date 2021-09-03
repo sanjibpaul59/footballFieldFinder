@@ -13,11 +13,15 @@ const cart = {
       if (localStorage.getItem("cart")) {
         cart = JSON.parse(localStorage.getItem("cart"))
       }
-      console.log(item.ofField)
-      item.bookingStatus = true
-      cart.push({
-        slot: item,
-      })
+      let index = cart.findIndex((e) => e._id === item._id)
+      if (index === -1) {
+        cart.push({
+          slot: item,
+        })
+      } else {
+        cart[index] = item
+      }
+
       localStorage.setItem("cart", JSON.stringify(cart))
       cb()
     }

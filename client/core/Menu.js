@@ -43,11 +43,10 @@ const iconStyle = {
 const Menu = withRouter(({ history }) => (
   <div style={flexStyle}>
     <AppBar
-      elevation={0}
-      position="static"
+      position="sticky"
       style={{ zIndex: 12343455, backgroundColor: "#fafafa", color: "#212121" }}
     >
-      <Toolbar>
+      <Toolbar variant="dense">
         <div style={{ padding: 3 }}>
           <Link to="/">
             <IconButton
@@ -101,6 +100,19 @@ const Menu = withRouter(({ history }) => (
                     </Link>
                   </span>
                 )}
+                <Link to="/cart">
+                  <Button style={isActive(history, "/cart")}>
+                    Cart
+                    <Badge
+                      color="secondary"
+                      invisible={false}
+                      badgeContent={cart.itemTotal()}
+                      style={{ marginLeft: "7px" }}
+                    >
+                      <CartIcon />
+                    </Badge>
+                  </Button>
+                </Link>
                 <Link to={"/user/" + auth.isAuthenticated().user._id}>
                   <Button
                     style={isActive(

@@ -204,20 +204,23 @@ export default function Field({ match }) {
     setOpen(false)
   }
 
-  const handleSlotInfo = (slots) => {
-    if (slots != undefined) {
+  const handleSlotInfo = (field) => {
+    if (field.slots != undefined) {
+      let slots = field.slots
       let allAvailableSlots = slots.reduce(function (validSlots, slot) {
         if (DateTime.now() < DateTime.fromISO(slot.ofDate)) {
+          slot.fieldName = field.fieldName
+          slot.fieldLocation = field.location
           validSlots.push(slot)
         }
         return validSlots
       }, [])
+      console.log(allAvailableSlots)
       return allAvailableSlots
     }
   }
   const handleAvailableSlots = (slots) => {
     if (slots != undefined) {
-      console.log(slots)
       let allAvailableSlots = slots.reduce(function (validSlots, slot) {
         if (
           DateTime.now() < DateTime.fromISO(slot.ofDate) &&
@@ -336,12 +339,6 @@ export default function Field({ match }) {
             <Typography className={classes.subheading} variant="body1">
               {field.description}
             </Typography>
-
-            {/* {field.openForBooking && (
-              <div className={classes.enroll}>
-                <Book fieldId={field._id} />
-              </div>
-            )} */}
           </div>
         </div>
         <Divider />
@@ -429,7 +426,7 @@ export default function Field({ match }) {
                   ),
               },
             ]}
-            data={handleSlotInfo(field.slots)}
+            data={handleSlotInfo(field)}
             components={{
               // Actions: () => {
               //   return auth.isAuthenticated().user &&
